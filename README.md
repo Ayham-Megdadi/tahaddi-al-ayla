@@ -30,7 +30,7 @@ Designed for Arabic-speaking families and groups, it brings the excitement of TV
 
 ## 🎮 Live Demo
 
-**[🕹️ Play Now →](https://AyhamMegdadi.github.io/tahaddi-aleila)**
+**[🕹️ Play Now →](https://ayham-megdadi.github.io/tahaddi-al-ayla)**
 
 ---
 
@@ -108,7 +108,7 @@ open index.html
 # or just double-click index.html
 ```
 
-Or use the **[Live Demo](https://AyhamMegdadi.github.io/tahaddi-aleila)** directly.
+Or use the **[Live Demo](https://ayham-megdadi.github.io/tahaddi-al-ayla/)** directly.
 
 ---
 
