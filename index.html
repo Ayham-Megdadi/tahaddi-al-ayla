@@ -1,0 +1,2346 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>تحدّي العيلة — لعبة مسابقات عائلية عربية</title>
+<meta name="description" content="لعبة مسابقات عربية تفاعلية على طريقة Family Feud. خمّن أشهر الإجابات، اجمع النقاط، وتحدّ الفريق المنافس. تعمل مباشرة في المتصفح دون إنترنت." />
+<meta name="theme-color" content="#071426" />
+<meta name="author" content="Ayham Megdadi" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="تحدّي العيلة — مين بعرف الناس أكثر؟" />
+<meta property="og:description" content="لعبة مسابقات عربية تفاعلية: خمّن الإجابات الشائعة، اجمع النقاط، وتحدّ الفريق المنافس. تعمل دون خادم." />
+<meta property="og:image" content="./Tahaddi_ayham.png" />
+<meta property="og:locale" content="ar_AR" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="تحدّي العيلة — لعبة مسابقات عربية" />
+<meta name="twitter:description" content="لعبة مسابقات عربية تفاعلية على طريقة برامج التلفزيون." />
+<meta name="twitter:image" content="./Tahaddi_ayham.png" />
+<link rel="icon" type="image/jpeg" href="./Tahaddi_ayham.png" />
+<link rel="apple-touch-icon" href="./Tahaddi_ayham.png" />
+<style>
+:root{
+  --navy:#071426; --navy2:#0b2138; --navy3:#061b2e;
+  --gold:#f6c453; --gold2:#ffd97a; --cyan:#4fd1ff;
+  --text:#f6f9ff; --muted:#a7b9d1; --danger:#ff5470; --ok:#37d67a;
+  --card:rgba(255,255,255,.05); --border:rgba(255,255,255,.1);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;height:100%}
+body{
+  font-family:"Cairo","Tajawal","Segoe UI","Tahoma",sans-serif;
+  color:var(--text); background:
+    radial-gradient(circle at 18% 8%, rgba(79,209,255,.18), transparent 32%),
+    radial-gradient(circle at 82% 0%, rgba(246,196,83,.15), transparent 34%),
+    linear-gradient(135deg, var(--navy) 0%, var(--navy2) 55%, var(--navy3) 100%);
+  min-height:100vh; overflow-x:hidden;
+}
+button{font-family:inherit;cursor:pointer;border:none;color:inherit}
+input,select,textarea{font-family:inherit;color:inherit}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,a:focus-visible{
+  outline:2px solid var(--cyan); outline-offset:2px;
+}
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.01ms !important;transition-duration:.01ms !important}
+}
+.screen{display:none;min-height:100vh;padding:18px;max-width:1200px;margin:0 auto}
+.screen.active{display:block;animation:fade .35s ease}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@keyframes pop{0%{transform:scale(.94);opacity:.4}70%{transform:scale(1.03)}100%{transform:scale(1);opacity:1}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+@keyframes glow{0%,100%{box-shadow:0 0 12px rgba(246,196,83,.5)}50%{box-shadow:0 0 28px rgba(246,196,83,.9)}}
+.pop{animation:pop .28s ease-out}
+.shake{animation:shake .4s ease}
+.btn{border-radius:14px;padding:12px 20px;font-weight:800;font-size:16px;transition:transform .08s ease, background .2s}
+.btn:active{transform:scale(.96)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn-gold{background:linear-gradient(180deg,var(--gold2),var(--gold));color:#241c00;box-shadow:0 6px 20px rgba(246,196,83,.25)}
+.btn-blue{background:rgba(79,209,255,.15);border:1px solid rgba(79,209,255,.4);color:#d9f2ff}
+.btn-danger{background:rgba(255,84,112,.15);border:1px solid rgba(255,84,112,.4);color:#ffd9e0}
+.btn-ghost{background:rgba(255,255,255,.05);border:1px solid var(--border);color:var(--text)}
+.btn-sm{padding:8px 12px;font-size:13px;border-radius:10px}
+.btn-xl{padding:18px 32px;font-size:20px;min-width:220px;border-radius:18px}
+.panel{background:var(--card);border:1px solid var(--border);border-radius:22px;padding:18px;backdrop-filter:blur(8px)}
+/* HERO */
+.hero{text-align:center;padding:28px 16px 8px}
+.hero-logo{font-size:64px;line-height:1;filter:drop-shadow(0 0 24px rgba(246,196,83,.4))}
+.hero-title{margin:8px 0 4px;font-size:44px;font-weight:900;color:var(--gold);letter-spacing:1px;line-height:1.1}
+.hero-tag{margin:0 0 10px;font-size:20px;color:var(--cyan);font-weight:800}
+.hero-desc{max-width:640px;margin:0 auto 18px;color:var(--muted);font-size:15px;line-height:1.7}
+.hero-buttons{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:14px}
+.hero-stats{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:8px}
+@media (max-width:600px){.hero-title{font-size:34px}.hero-logo{font-size:48px}}
+/* FEATURES */
+.features{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin:20px 0}
+.feature{padding:20px;border-radius:18px;background:rgba(255,255,255,.05);border:1px solid var(--border);text-align:center}
+.feature-icon{font-size:38px;margin-bottom:6px}
+.feature h3{margin:4px 0;font-size:16px;color:var(--gold)}
+.feature p{margin:0;font-size:13px;color:var(--muted);line-height:1.6}
+/* MENU */
+.home-menu{display:grid;gap:10px;grid-template-columns:repeat(2,minmax(0,1fr));max-width:720px;margin:0 auto}
+.home-menu .btn{padding:16px;font-size:15px}
+@media(max-width:600px){.home-menu{grid-template-columns:1fr}}
+.badge{display:inline-block;padding:4px 10px;border-radius:999px;background:rgba(79,209,255,.15);color:#c6efff;font-size:12px;font-weight:700}
+.muted{color:var(--muted);font-size:13px}
+/* FOOTER */
+.site-footer{margin-top:36px;padding:22px 0;border-top:1px solid var(--border);text-align:center;color:var(--muted);font-size:14px}
+.dev-credit{margin-bottom:8px}
+.dev-credit a{color:var(--gold);text-decoration:none;font-weight:800}
+.dev-credit a:hover{text-decoration:underline}
+.gh-link{display:inline-flex;align-items:center;gap:6px;color:var(--muted);text-decoration:none;font-size:13px}
+.gh-link:hover{color:var(--gold)}
+/* LAYOUT */
+.grid{display:grid;gap:12px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.center{justify-content:center}
+.between{justify-content:space-between}
+.field{display:block}
+.field>span{display:block;font-size:12px;color:#b9d3ea;margin-bottom:6px}
+.field input,.field select,.field textarea{width:100%;padding:10px 12px;border-radius:12px;background:rgba(0,0,0,.35);border:1px solid var(--border);font-size:15px;outline:none}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--cyan)}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media(max-width:700px){.grid-2,.grid-3{grid-template-columns:1fr}}
+/* GAME */
+.g-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.g-teams{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+.team-card{padding:14px;border-radius:18px;background:rgba(255,255,255,.04);border:2px solid transparent;text-align:center;transition:border-color .2s, background .2s}
+.team-card.turn{border-color:var(--gold);background:rgba(246,196,83,.08);box-shadow:0 0 22px rgba(246,196,83,.15)}
+.team-card h3{margin:0 0 4px;font-size:16px;font-weight:900}
+.team-card .score{font-size:36px;font-weight:900;line-height:1}
+.team-card .role{font-size:11px;color:var(--gold);font-weight:700}
+.q-panel{padding:18px;border-radius:20px;background:rgba(0,0,0,.35);border:1px solid var(--border);text-align:center;margin-bottom:14px}
+.q-panel.steal{border-color:var(--danger);box-shadow:0 0 22px rgba(255,84,112,.2)}
+.q-panel .meta{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:6px}
+.q-panel h2{margin:0;font-size:22px;line-height:1.5;font-weight:800}
+.q-panel .steal-tag{display:inline-block;margin-top:8px;padding:4px 12px;border-radius:999px;background:rgba(255,84,112,.2);color:#ffd9e0;font-size:12px;font-weight:800;border:1px solid rgba(255,84,112,.5)}
+.q-panel .pot{margin-top:10px;font-size:13px;color:var(--cyan)}
+.q-panel .pot strong{color:var(--gold);font-size:18px}
+.strikes{display:flex;justify-content:center;gap:10px;margin:10px 0}
+.strike-x{font-size:36px;font-weight:900;color:var(--muted);transition:color .2s, transform .2s}
+.strike-x.on{color:var(--danger);text-shadow:0 0 18px rgba(255,84,112,.7)}
+.answers{display:grid;gap:8px;margin-bottom:12px}
+.ans-row{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-radius:14px;background:rgba(0,0,0,.45);border:1px solid rgba(255,255,255,.07);font-size:17px;font-weight:700}
+.ans-row.revealed{background:linear-gradient(90deg,rgba(246,196,83,.18),rgba(79,209,255,.08));border-color:rgba(246,196,83,.6);color:#fff;box-shadow:0 0 16px rgba(246,196,83,.14)}
+.ans-row .num{width:32px;height:32px;display:inline-flex;align-items:center;justify-content:center;background:rgba(0,0,0,.6);border-radius:50%;font-weight:900;color:var(--gold);font-size:14px}
+.ans-row .pts{color:var(--gold);font-weight:900}
+.input-row{display:flex;gap:8px;margin-bottom:12px}
+.input-row input{flex:1;padding:14px;border-radius:14px;background:rgba(0,0,0,.4);border:1px solid var(--border);font-size:16px;outline:none}
+.input-row input:focus{border-color:var(--gold)}
+.input-row input:disabled{opacity:.5;cursor:not-allowed}
+.input-row button:disabled{opacity:.4;cursor:not-allowed}
+.host-panel{padding:14px;border-radius:18px;background:rgba(0,0,0,.35);border:1px dashed rgba(79,209,255,.3);margin-top:14px}
+.host-panel h4{margin:0 0 10px;font-size:14px;color:var(--cyan);font-weight:900}
+.host-panel .row{gap:6px}
+.host-panel .btn{font-size:12px;padding:8px 10px;border-radius:10px}
+.steal-result{padding:14px 16px;border-radius:16px;margin:0 0 12px;font-weight:800;text-align:center;font-size:15px;animation:pop .3s ease}
+.steal-result.win{background:rgba(55,214,122,.15);border:1px solid rgba(55,214,122,.5);color:#c8ffe0}
+.steal-result.lose{background:rgba(255,84,112,.15);border:1px solid rgba(255,84,112,.5);color:#ffd9e0}
+#toast{position:fixed;top:16px;left:50%;transform:translateX(-50%);padding:12px 20px;border-radius:14px;font-weight:900;background:#0f2740;border:1px solid var(--border);color:#fff;display:none;z-index:999;box-shadow:0 8px 30px rgba(0,0,0,.4)}
+#toast.show{display:block;animation:fade .2s ease}
+#toast.err{border-color:var(--danger);color:#ffd9e0}
+#toast.ok{border-color:var(--ok);color:#c8ffe0}
+#toast.info{border-color:var(--cyan);color:#c6efff}
+.q-list{max-height:60vh;overflow:auto;display:flex;flex-direction:column;gap:8px;padding-left:6px}
+.q-item{padding:12px;border-radius:12px;background:rgba(0,0,0,.3);border:1px solid var(--border)}
+.q-item .meta{display:flex;gap:8px;font-size:11px;color:var(--muted);margin-bottom:4px;flex-wrap:wrap}
+.q-item h4{margin:0 0 6px;font-size:15px}
+.q-item .ans-pts{font-size:12px;color:var(--muted)}
+.fm-wrap{max-width:800px;margin:0 auto}
+.fm-head{text-align:center;margin-bottom:14px}
+.fm-head h2{margin:0;color:var(--gold);font-size:26px}
+.fm-timer{font-size:42px;font-weight:900;color:var(--cyan);text-align:center;margin-bottom:10px}
+.fm-prompt{text-align:center;font-size:20px;font-weight:800;margin:14px 0}
+.fm-slot{padding:12px;border-radius:12px;background:rgba(0,0,0,.4);border:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;font-size:14px;gap:10px;flex-wrap:wrap}
+.fm-slot.done{border-color:rgba(55,214,122,.5);background:rgba(55,214,122,.08)}
+.final{text-align:center;padding:26px;border-radius:24px;background:linear-gradient(180deg,rgba(246,196,83,.14),rgba(79,209,255,.05));border:1px solid rgba(246,196,83,.4);animation:glow 2s ease infinite}
+.final h1{margin:0;font-size:38px;color:var(--gold);font-weight:900}
+.final .scores{display:flex;gap:20px;justify-content:center;margin:16px 0}
+.final .scores .sc{flex:1;max-width:200px;padding:14px;border-radius:16px;background:rgba(0,0,0,.4)}
+.final .scores .sc b{display:block;font-size:28px}
+.fs-btn{position:fixed;bottom:14px;left:14px;z-index:50;background:rgba(0,0,0,.55);border:1px solid var(--border);padding:8px 12px;border-radius:12px;font-size:12px;color:#fff}
+</style>
+</head>
+<body>
+
+<div id="toast"></div>
+
+<!-- ================== HOME ================== -->
+<section id="screen-home" class="screen active">
+  <header class="hero">
+    <div class="hero-logo" aria-hidden="true">🏆</div>
+    <h1 class="hero-title">تحدّي العيلة</h1>
+    <p class="hero-tag">مين بعرف الناس أكثر؟</p>
+    <p class="hero-desc">
+      لعبة مسابقات عربية مستوحاة من برامج التلفزيون: خمّن أشهر إجابات الناس، اجمع النقاط مع فريقك،
+      وواجه الفريق المنافس في جولات مشوّقة — تعمل مباشرة في متصفحك دون خادم أو اتصال بالإنترنت.
+    </p>
+    <div class="hero-buttons">
+      <button class="btn btn-gold btn-xl" onclick="goSetup()">🎮 ابدأ اللعب</button>
+      <button class="btn btn-blue btn-xl" onclick="continueGame()">💾 متابعة لعبة</button>
+    </div>
+    <p class="hero-stats">
+      <span class="badge"><span id="home-qcount">0</span> سؤال فعلي</span>
+      <span class="badge">RTL كامل</span>
+      <span class="badge">يعمل بلا إنترنت</span>
+    </p>
+  </header>
+
+  <section class="features" aria-label="ميزات اللعبة">
+    <article class="feature">
+      <div class="feature-icon" aria-hidden="true">🎯</div>
+      <h3>مطابقة ذكية</h3>
+      <p>يقبل المرادفات واللهجات وأخطاء الإملاء البسيطة دون تساهل مفرط.</p>
+    </article>
+    <article class="feature">
+      <div class="feature-icon" aria-hidden="true">⚡</div>
+      <h3>جولة النقاط السريعة</h3>
+      <p>تحدٍّ أخير بين لاعبين لقلب النتيجة قبل إعلان الفائز.</p>
+    </article>
+    <article class="feature">
+      <div class="feature-icon" aria-hidden="true">🛡️</div>
+      <h3>قواعد دقيقة</h3>
+      <p>احتساب آمن للنقاط، لا تكرار، وسرقة محسومة قبل الجولة التالية.</p>
+    </article>
+  </section>
+
+  <nav class="home-menu" aria-label="قائمة اللعبة">
+    <button class="btn btn-blue" onclick="showScreen('screen-bank');renderBank()">📚 بنك الأسئلة</button>
+    <button class="btn btn-blue" onclick="showScreen('screen-rules')">❓ شرح القواعد</button>
+    <button class="btn btn-ghost" onclick="startFastMoneyScreen()">⚡ جولة النقاط السريعة</button>
+    <button class="btn btn-ghost" onclick="resetSavedGame()">🧹 حذف الحفظ</button>
+  </nav>
+
+  <footer class="site-footer">
+    <div class="dev-credit">
+      Developed by
+      <a href="https://www.instagram.com/ayham_megdadi/" target="_blank" rel="noopener noreferrer">ayham_megdadi</a>
+    </div>
+    <a class="gh-link" href="https://github.com/Ayham-Megdadi" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
+        <path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.56v-2c-3.2.7-3.87-1.37-3.87-1.37-.52-1.33-1.28-1.68-1.28-1.68-1.05-.72.08-.71.08-.71 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.71 1.26 3.37.96.1-.75.4-1.26.73-1.55-2.56-.29-5.25-1.28-5.25-5.7 0-1.26.45-2.29 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.78 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.8 1.19 1.83 1.19 3.09 0 4.43-2.7 5.4-5.27 5.69.41.36.78 1.07.78 2.16v3.2c0 .31.21.68.8.56A11.5 11.5 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5z"/>
+      </svg>
+      <span>GitHub</span>
+    </a>
+  </footer>
+</section>
+
+<!-- ================== SETUP ================== -->
+<section id="screen-setup" class="screen">
+  <div class="row between" style="margin-bottom:14px">
+    <h2 style="margin:0">إعدادات اللعبة</h2>
+    <button class="btn btn-ghost" onclick="showScreen('screen-home')">رجوع</button>
+  </div>
+  <div class="panel grid grid-2">
+    <label class="field"><span>اسم الفريق الأول</span><input id="set-t1" value="الفريق الأزرق" maxlength="30"></label>
+    <label class="field"><span>اسم الفريق الثاني</span><input id="set-t2" value="الفريق الذهبي" maxlength="30"></label>
+    <label class="field"><span>لون الفريق الأول</span><input id="set-c1" type="color" value="#4fd1ff"></label>
+    <label class="field"><span>لون الفريق الثاني</span><input id="set-c2" type="color" value="#f6c453"></label>
+    <label class="field"><span>عدد الجولات</span><input id="set-rounds" type="number" min="1" max="50" value="5"></label>
+    <label class="field"><span>حد الأخطاء</span><input id="set-strikes" type="number" min="1" max="5" value="3"></label>
+    <label class="field"><span>مضاعف النقاط</span><input id="set-mult" type="number" min="1" max="5" value="1"></label>
+    <label class="field"><span>الفئة</span><select id="set-cat"></select></label>
+    <label class="field"><span>الصعوبة</span>
+      <select id="set-diff">
+        <option>الكل</option><option>سهل</option><option>متوسط</option><option>صعب</option>
+      </select>
+    </label>
+    <label class="field"><span>مدة المؤقت (ثانية)</span><input id="set-timer" type="number" min="10" max="300" value="60"></label>
+    <label class="field"><span>مستوى الصوت</span><input id="set-vol" type="range" min="0" max="100" value="50"></label>
+    <label class="row" style="grid-column:1/-1;gap:20px;flex-wrap:wrap">
+      <span class="row" style="gap:6px"><input type="checkbox" id="set-timeron"> تفعيل المؤقت</span>
+      <span class="row" style="gap:6px"><input type="checkbox" id="set-sound" checked> تفعيل الأصوات</span>
+      <span class="row" style="gap:6px"><input type="checkbox" id="set-steal" checked> تفعيل فرصة السرقة</span>
+    </label>
+  </div>
+  <div class="row center" style="margin-top:14px">
+    <button class="btn btn-gold" style="min-width:220px;font-size:18px" onclick="startGame()">ابدأ اللعبة</button>
+  </div>
+</section>
+
+<!-- ================== GAME ================== -->
+<section id="screen-game" class="screen">
+  <div class="g-top">
+    <button class="btn btn-ghost btn-sm" onclick="exitToMenu()">القائمة</button>
+    <div style="text-align:center">
+      <div class="badge" id="g-round">الجولة 0 / 0</div>
+      <h3 style="margin:6px 0 0">تحدّي العيلة</h3>
+    </div>
+    <button class="btn btn-danger btn-sm" onclick="endGame()">إعلان النتيجة</button>
+  </div>
+  <div class="g-teams" id="g-teams"></div>
+  <div class="steal-result" id="steal-result" style="display:none"></div>
+  <div class="q-panel" id="g-panel">
+    <div class="meta"><span id="g-cat">—</span><span id="g-diff">—</span></div>
+    <h2 id="g-question">—</h2>
+    <div id="g-steal-tag" class="steal-tag" style="display:none">🔄 فرصة السرقة للفريق المنافس</div>
+    <div class="pot">نقاط الجولة: <strong id="g-pot">0</strong></div>
+    <div class="strikes" id="g-strikes"></div>
+    <div id="g-timer" class="muted" style="font-weight:800;font-size:14px;color:#8fe6ff"></div>
+  </div>
+  <div class="answers" id="g-answers"></div>
+  <div class="input-row">
+    <input id="g-input" placeholder="اكتب إجابة الفريق هنا..." onkeydown="if(event.key==='Enter')submitAnswer()">
+    <button class="btn btn-gold" id="g-submit" onclick="submitAnswer()">تحقق</button>
+  </div>
+  <div class="host-panel">
+    <h4>لوحة المقدم</h4>
+    <div class="row">
+      <button class="btn btn-blue" onclick="manualRevealNext()">كشف التالي</button>
+      <button class="btn btn-blue" onclick="wrongAnswer()">تسجيل خطأ</button>
+      <button class="btn btn-blue" onclick="undoLast()">تراجع</button>
+      <button class="btn btn-blue" onclick="switchTurn()">تبديل الدور</button>
+      <button class="btn btn-blue" onclick="stealSuccess()">نجاح السرقة</button>
+      <button class="btn btn-blue" onclick="stealFail()">فشل السرقة</button>
+      <button class="btn btn-gold" onclick="finishRound()">إنهاء الجولة</button>
+      <button class="btn btn-gold" onclick="nextRound()">السؤال التالي</button>
+      <button class="btn btn-ghost" onclick="adjustScore(0,10)">+10 للفريق 1</button>
+      <button class="btn btn-ghost" onclick="adjustScore(0,-10)">-10 للفريق 1</button>
+      <button class="btn btn-ghost" onclick="adjustScore(1,10)">+10 للفريق 2</button>
+      <button class="btn btn-ghost" onclick="adjustScore(1,-10)">-10 للفريق 2</button>
+    </div>
+  </div>
+</section>
+
+<!-- ================== BANK ================== -->
+<section id="screen-bank" class="screen">
+  <div class="row between" style="margin-bottom:12px;flex-wrap:wrap">
+    <h2 style="margin:0">بنك الأسئلة</h2>
+    <div class="row">
+      <button class="btn btn-blue btn-sm" onclick="exportBank()">تصدير JSON</button>
+      <label class="btn btn-blue btn-sm" style="cursor:pointer">
+        استيراد JSON
+        <input type="file" accept=".json" style="display:none" onchange="importBank(event)">
+      </label>
+      <button class="btn btn-danger btn-sm" onclick="restoreOriginalBank()">استعادة البنك الأصلي</button>
+      <button class="btn btn-ghost btn-sm" onclick="showScreen('screen-home')">رجوع</button>
+    </div>
+  </div>
+  <div class="panel grid grid-3" style="margin-bottom:12px">
+    <input id="bank-search" placeholder="ابحث بالسؤال أو الإجابة أو المرادف..." oninput="renderBank()" style="padding:10px 12px;border-radius:12px;background:rgba(0,0,0,.35);border:1px solid var(--border);font-size:15px">
+    <select id="bank-cat" onchange="renderBank()" style="padding:10px 12px;border-radius:12px;background:rgba(0,0,0,.35);border:1px solid var(--border);font-size:15px">
+      <option>الكل</option>
+    </select>
+    <select id="bank-diff" onchange="renderBank()" style="padding:10px 12px;border-radius:12px;background:rgba(0,0,0,.35);border:1px solid var(--border);font-size:15px">
+      <option>الكل</option><option>سهل</option><option>متوسط</option><option>صعب</option>
+    </select>
+  </div>
+  <div class="panel" style="margin-bottom:12px">
+    <h4 id="nq-heading" style="margin:0 0 8px;color:var(--cyan)">إضافة سؤال جديد</h4>
+    <div class="grid grid-2">
+      <input id="nq-q" placeholder="نص السؤال" style="padding:10px;border-radius:12px;background:rgba(0,0,0,.35);border:1px solid var(--border);font-size:15px">
+      <input id="nq-cat" placeholder="الفئة" style="padding:10px;border-radius:12px;background:rgba(0,0,0,.35);border:1px solid var(--border);font-size:15px">
+      <select id="nq-diff" style="padding:10px;border-radius:12px;background:rgba(0,0,0,.35);border:1px solid var(--border);font-size:15px">
+        <option>سهل</option><option selected>متوسط</option><option>صعب</option>
+      </select>
+      <div class="row">
+        <button class="btn btn-gold" id="nq-submit" onclick="saveQuestion()">إضافة السؤال</button>
+        <button class="btn btn-ghost" id="nq-cancel" onclick="cancelEdit()" style="display:none">إلغاء</button>
+      </div>
+    </div>
+    <textarea id="nq-answers" placeholder="الإجابات، كل إجابة في سطر بالصيغة: النص | النقاط | مرادفات مفصولة بفاصلة" style="margin-top:8px;width:100%;height:120px;padding:10px;border-radius:12px;background:rgba(0,0,0,.35);border:1px solid var(--border);font-size:14px;font-family:inherit;direction:rtl"></textarea>
+  </div>
+  <div class="panel" style="margin-bottom:12px">
+    <h4 style="margin:0 0 8px;color:var(--cyan)">إحصاءات الفئات</h4>
+    <div id="bank-stats" class="grid grid-3" style="font-size:13px"></div>
+  </div>
+  <div class="q-list" id="bank-list"></div>
+</section>
+
+<!-- ================== RULES ================== -->
+<section id="screen-rules" class="screen">
+  <div class="row between" style="margin-bottom:14px">
+    <h2 style="margin:0">شرح القواعد</h2>
+    <button class="btn btn-ghost" onclick="showScreen('screen-home')">رجوع</button>
+  </div>
+  <div class="panel">
+    <ol style="line-height:2;font-size:15px;padding-right:20px">
+      <li>يعرض المقدم السؤال، وتبقى الإجابات مخفية حتى تُكشف.</li>
+      <li>الفريق صاحب الدور يكتب إجابته؛ الإجابة الصحيحة تكشف وتضيف نقاطها إلى نقاط الجولة.</li>
+      <li>عند كل إجابة خاطئة تُضاف علامة X.</li>
+      <li>بعد ثلاثة أخطاء (أو حسب الإعداد) يحصل الفريق المنافس على فرصة واحدة للسرقة.</li>
+      <li>إذا نجحت السرقة، تنتقل نقاط الجولة كاملة إلى الفريق السارق. إذا فشلت، تبقى للفريق الأصلي.</li>
+      <li>لا يمكن كشف نقاط الجولة أو الانتقال لسؤال جديد قبل حسم السرقة (نجاح/فشل) أو تجاوز الجولة يدويًا.</li>
+      <li>يمكن للمقدم كشف الإجابات المتبقية يدويًا عند الحاجة.</li>
+      <li>تُضاعف نقاط الجولات المتقدمة حسب الإعداد.</li>
+      <li>الفريق الأكثر نقاطًا في النهاية يفوز.</li>
+    </ol>
+    <p class="muted">النقاط تقديرية لأغراض اللعب ما لم توجد بيانات استطلاع موثقة.</p>
+  </div>
+</section>
+
+<!-- ================== FAST MONEY ================== -->
+<section id="screen-fastmoney" class="screen">
+  <div class="row between" style="margin-bottom:14px">
+    <h2 style="margin:0">جولة النقاط السريعة</h2>
+    <button class="btn btn-ghost" onclick="showScreen('screen-home')">رجوع</button>
+  </div>
+  <div class="fm-wrap panel">
+    <div class="fm-head">
+      <h2 id="fm-title">اللاعب الأول</h2>
+      <p class="muted">أجب عن 5 أسئلة قبل انتهاء الوقت. الهدف: <b id="fm-target">200</b> نقطة.</p>
+    </div>
+    <div class="fm-timer" id="fm-timer">--</div>
+    <div class="fm-prompt" id="fm-q">اضغط «ابدأ» لبدء المحاولة</div>
+    <div class="input-row">
+      <input id="fm-input" placeholder="اكتب إجابتك..." onkeydown="if(event.key==='Enter')fmSubmit()">
+      <button class="btn btn-gold" onclick="fmSubmit()">تأكيد</button>
+    </div>
+    <div id="fm-slots"></div>
+    <div class="row center" style="margin-top:12px">
+      <button class="btn btn-gold" id="fm-action" onclick="fmAction()">ابدأ المحاولة</button>
+    </div>
+  </div>
+</section>
+
+<!-- ================== RESULTS ================== -->
+<section id="screen-results" class="screen">
+  <div class="final">
+    <h1 id="res-title">النتيجة</h1>
+    <div class="scores" id="res-scores"></div>
+    <div class="row center" style="margin-top:14px">
+      <button class="btn btn-gold" onclick="showScreen('screen-home')">القائمة الرئيسية</button>
+      <button class="btn btn-blue" onclick="goSetup()">لعبة جديدة</button>
+    </div>
+  </div>
+</section>
+
+<button class="fs-btn" onclick="toggleFullscreen()" aria-label="ملء الشاشة">⛶ ملء الشاشة</button>
+
+<script>
+/* ============================================================================
+   تحدّي العيلة — Ayham Megdadi
+   تحديثات هذه النسخة:
+   1) مطابقة إجابات جديدة: ترتيب كلمات مستقل + مرادفات أردنية/شامية + إعدادات مركزية.
+   2) إضافة 25+ سؤالًا أردنيًا/شاميًا/خليجيًا.
+   3) قواعد سرقة محكمة + لوحة نتيجة مرئية أسفل السؤال.
+   4) تصميم صفحة رئيسية احترافي + تذييل المطور (Instagram/GitHub).
+   5) SEO + OG + Twitter Card + Favicon + apple-touch-icon.
+   6) Fast Money بمعاينة الإجابات الصحيحة ومنع ازدواج النقاط.
+   7) prefers-reduced-motion + focus-visible.
+============================================================================ */
+
+/* ================= بنك الأسئلة ================= */
+const BUILT_IN_QUESTIONS = [
+{c:'العائلة والأقارب',d:'سهل',q:'اذكر شيئًا يفعله الشخص فور استيقاظه من النوم',a:[
+['يفحص الهاتف',32,'يمسك الموبايل,يفتح التلفون'],['يغسل وجهه',24,'يغسل وجهه بالماء'],
+['يشرب القهوة',18,'يعمل قهوة,يشرب نسكافيه'],['يذهب إلى الحمام',14,'يدخل الحمام'],
+['يعود إلى النوم',12,'ينام مرة ثانية']]},
+{c:'العائلة والأقارب',d:'سهل',q:'اذكر شيئًا يتجادل عليه أفراد العائلة عادةً',a:[
+['الريموت',28,'ريموت التلفزيون'],['التكييف',22,'المكيف,الدفاية'],
+['الأكل',18,'الطعام,الغداء'],['تنظيف المنزل',18,'الترتيب,النظافة'],
+['استخدام الهاتف',14,'الموبايل']]},
+{c:'العائلة والأقارب',d:'سهل',q:'اذكر صفة يحبها الناس في جدتهم',a:[
+['الحنان',30,'العطف'],['الطبخ اللذيذ',25,'أكلها طيب,الطبخ'],
+['الحكايات',20,'القصص,الحكي'],['الدعاء',15,'تدعي لنا'],
+['الكرم',10,'الجود']]},
+{c:'العائلة والأقارب',d:'متوسط',q:'اذكر سببًا يجعل الأم تقلق على ابنها',a:[
+['تأخره خارج المنزل',28,'ما يرجع البيت'],['دراسته',22,'العلامات,الامتحانات'],
+['صحته',18,'مرضه'],['أصدقاؤه',18,'رفاقه'],
+['هاتفه',14,'الموبايل,الإنترنت']]},
+{c:'العائلة والأقارب',d:'سهل',q:'اذكر شيئًا يفعله الناس في زيارة الأقارب',a:[
+['شرب القهوة',28,'شرب الشاي'],['تبادل الأخبار',24,'الحكي,السوالف'],
+['تناول الحلويات',20,'أكل حلو,كنافة'],['مشاهدة التلفزيون',15,'الجلسة'],
+['اللعب مع الأطفال',13,'']]},
+{c:'العائلة والأقارب',d:'متوسط',q:'اذكر سببًا يجعل شخصًا لا يحضر مناسبة عائلية',a:[
+['انشغاله بالعمل',28,'الدوام,الشغل'],['بعده عن المدينة',22,'السفر'],
+['خلافات سابقة',18,'مشاكل,زعل'],['ظروف صحية',17,'مريض'],
+['عدم الرغبة',15,'ما بحب']]},
+{c:'العائلة والأقارب',d:'سهل',q:'اذكر شيئًا يفعله الأب في الصباح قبل العمل',a:[
+['يشرب القهوة',30,'يشرب الشاي'],['يقرأ الأخبار',22,'الجريدة,الهاتف'],
+['يستحم',18,'يتحمم'],['يفطر',18,'يأكل'],
+['يستمع للأخبار',12,'الراديو']]},
+{c:'العائلة والأقارب',d:'متوسط',q:'اذكر سببًا يدفع شخصًا للاتصال بأمه يوميًا',a:[
+['الاطمئنان عليها',30,'يسأل عنها'],['أخذ نصيحتها',22,'يستشيرها'],
+['طلب طبخة',18,'وصفة,أكل'],['مشاركة الأخبار',16,'يحكي لها'],
+['طلب دعاء',14,'الدعاء']]},
+{c:'العائلة والأقارب',d:'سهل',q:'اذكر ما يفعله الجد عادة عندما يزوره الأحفاد',a:[
+['يروي قصصًا',30,'يحكي'],['يعطيهم نقودًا',22,'عيدية,مصاري'],
+['يشتري لهم حلوى',18,'حلويات'],['يلعب معهم',16,''],
+['يصطحبهم في نزهة',14,'']]},
+{c:'العائلة والأقارب',d:'متوسط',q:'اذكر شيئًا يزعج الأم في المنزل عادةً',a:[
+['تأخير الأولاد',28,'التأخير'],['الأوساخ',22,'الغبار'],
+['تجاهل الواجبات',18,'عدم المساعدة'],['صوت التلفاز',18,'الضجيج'],
+['فتح الثلاجة كثيرًا',14,'']]},
+{c:'العائلة والأقارب',d:'سهل',q:'اذكر شيئًا يفعله أفراد العائلة ليلة الجمعة عادةً',a:[
+['تجمع عائلي',30,'جلوس الجميع'],['مشاهدة فيلم',22,'التلفزيون'],
+['أكل منسف',18,'طبخة'],['زيارة الجيران',16,''],
+['زيارة الأهل',14,'']]},
+{c:'الأصدقاء والعلاقات',d:'سهل',q:'اذكر صفة تجعل الشخص صديقًا ممتازًا',a:[
+['الأمانة',28,'الصدق'],['الدعم',22,'الوقوف معك'],
+['الفكاهة',18,'الضحك,روح حلوة'],['الاستماع',18,'يسمعك'],
+['الاحترام',14,'']]},
+{c:'الأصدقاء والعلاقات',d:'سهل',q:'اذكر شيئًا يفعله الأصدقاء في عطلة نهاية الأسبوع',a:[
+['الخروج للقهوة',28,'المقهى,كافيه'],['مشاهدة فيلم',22,'سينما,مسلسل'],
+['لعب كرة',18,'رياضة'],['التسوق',17,'مول,سوق'],
+['السهر',15,'سهرة']]},
+{c:'الأصدقاء والعلاقات',d:'متوسط',q:'اذكر سببًا يجعل الأصدقاء يتجادلون',a:[
+['خلاف في الرأي',28,'اختلاف'],['المال',22,'الدين,فلوس'],
+['المواعيد',18,'التأخير'],['الكلام وراء الظهر',18,'نميمة,كلام'],
+['الغيرة',14,'']]},
+{c:'الأصدقاء والعلاقات',d:'سهل',q:'اذكر مكانًا يلتقي فيه الأصدقاء عادةً',a:[
+['المقهى',30,'الكافيه,القهوة'],['الحديقة',22,'المنتزه'],
+['المول',18,'التسوق'],['بيت أحدهم',16,'البيت'],
+['المطعم',14,'']]},
+{c:'الأصدقاء والعلاقات',d:'متوسط',q:'اذكر سببًا يجعل شخصًا يبتعد عن صديق قديم',a:[
+['الانتقال لمدينة أخرى',28,'السفر'],['الانشغال بالعمل',22,'الحياة,الشغل'],
+['خلاف كبير',18,'زعل,مشكلة'],['تغير الطباع',18,'تغير'],
+['تأثير أشخاص آخرين',14,'']]},
+{c:'الأصدقاء والعلاقات',d:'سهل',q:'اذكر شيئًا يقدمه الصديق لصديقه في وقت الحزن',a:[
+['المواساة',28,'العزاء,التعزية'],['الجلوس معه',24,'الوقوف معه'],
+['الاتصال والسؤال',18,'مسج,يتصل'],['تقديم مساعدة عملية',16,'يساعده'],
+['الصمت والمشاركة',14,'']]},
+{c:'الأصدقاء والعلاقات',d:'متوسط',q:'اذكر ما الذي يجعل الصداقة تدوم',a:[
+['الصدق',30,'الأمانة'],['الاحترام',22,''],
+['التواصل المستمر',18,'السؤال'],['التسامح',16,''],
+['الوقوف في الشدة',14,'']]},
+{c:'الأصدقاء والعلاقات',d:'سهل',q:'اذكر شيئًا يفعله الأصدقاء عند التخرج',a:[
+['توزيع الهدايا',30,'الهدية'],['التصوير',22,'صور'],
+['حفلة',18,''],['التجمع',16,''],['البكاء',14,'']]},
+{c:'الزواج والخطوبة',d:'متوسط',q:'اذكر شيئًا يفعله الناس في حفلة الخطوبة',a:[
+['تلبيس الخاتم',28,'الدبل'],['توزيع الحلويات',22,'كنافة,حلو'],
+['التصوير',18,'فوتوغرافي'],['الرقص',18,'دبكة,زفة'],
+['تقديم الهدايا',14,'']]},
+{c:'الزواج والخطوبة',d:'سهل',q:'اذكر هدية تُقدَّم عادةً في حفلات الزفاف',a:[
+['المال',28,'نقوط,هدية نقدية'],['أدوات منزلية',22,'أواني,مطبخ'],
+['العطور',18,'بخور'],['المجوهرات',17,'ذهب,فضة'],
+['الملابس',15,'']]},
+{c:'الزواج والخطوبة',d:'متوسط',q:'اذكر سببًا يجعل تأجيل موعد الزفاف',a:[
+['الظروف المالية',30,'التوفير,المال'],['الحرب أو الظروف العامة',20,'الأوضاع'],
+['عدم جهوزية المكان',18,'القاعة'],['الدراسة',16,'الجامعة'],
+['المرض',16,'صحة']]},
+{c:'الزواج والخطوبة',d:'سهل',q:'اذكر من يحضر في أول لقاء عائلي للخطبة',a:[
+['الأب والأم',30,'الأهل,الوالدين'],['الإخوة',22,'الأخوة'],
+['الجد والجدة',18,'الجدة,الجد'],['الأعمام والأخوال',18,'الأقارب'],
+['الخالات',12,'']]},
+{c:'الزواج والخطوبة',d:'متوسط',q:'اذكر شيئًا يقلق العروسين قبل الزفاف',a:[
+['الحضور',28,'عدد المدعوين'],['التكاليف',22,'المصاريف,الميزانية'],
+['التنظيم',18,'الترتيبات'],['الملابس',18,'الفستان,البدلة'],
+['الكاميرا',14,'التصوير']]},
+{c:'المواقف المحرجة',d:'سهل',q:'اذكر موقفًا محرجًا يحدث في المصعد',a:[
+['السلام على شخص لا تعرفه',28,'التسليم'],['الوقوف بصمت',24,'السكوت'],
+['الضغط على زر خطأ',18,'الطابق الخطأ'],['الضحك بلا سبب',16,''],
+['التفكير العميق',14,'']]},
+{c:'المواقف المحرجة',d:'سهل',q:'اذكر شيئًا محرجًا يحدث في الصلاة أو المسجد',a:[
+['رفع الصوت بالقراءة',28,'الصوت العالي'],['الهاتف يرن',24,'الرنة'],
+['الوقوف في المكان الخطأ',18,'صف خطأ'],['السعال المتكرر',16,'الكحة'],
+['فتح الميكروفون',14,'']]},
+{c:'المواقف المحرجة',d:'متوسط',q:'اذكر موقفًا محرجًا يحدث في العمل',a:[
+['نسيان اسم زميل',28,'نسيان الاسم'],['ارسال رسالة للمدير بالخطأ',22,'رسالة خطأ'],
+['الضحك في اجتماع جدي',18,'ضحك'],['التأخر',18,'الدخول متأخر'],
+['ملابس غير مناسبة',14,'']]},
+{c:'المواقف المحرجة',d:'سهل',q:'اذكر شيئًا محرجًا يحدث في المطعم',a:[
+['سقوط الكوب',28,'الكأس'],['نسيان المحفظة',22,'المال'],
+['طعام مالح أو حار',18,'الأكل'],['التحدث بصوت عال',18,'الصوت'],
+['الطلب الخطأ',14,'']]},
+{c:'المواقف المحرجة',d:'متوسط',q:'اذكر موقفًا محرجًا يحدث أثناء مكالمة هاتفية',a:[
+['الاتصال بالشخص الخطأ',30,'رقم خطأ'],['انقطاع الخط',22,'الشبكة'],
+['التحدث بصوت عال',18,'الصوت المرتفع'],['الضحك مع شخص آخر',16,''],
+['السماع خاطئ',14,'']]},
+{c:'المواقف المحرجة',d:'سهل',q:'اذكر شيئًا محرجًا يحدث في المناسبات',a:[
+['تقطيع الثوب',28,'الملابس'],['السقوط',22,'التعثر'],
+['انقلاب مشروب',18,'سكب'],['نسيان الاسم',18,''],
+['التصوير بعينين مغمضتين',14,'']]},
+{c:'المواقف المحرجة',d:'متوسط',q:'اذكر موقفًا محرجًا في الطابور',a:[
+['تجاوز شخص عليك',30,'يقطع الطابور'],['نسيان المحفظة',22,'الفلوس'],
+['التحدث بصوت عال',18,'الضجيج'],['الانتقال لطابور أسرع ثم يتوقف',16,''],
+['اصطدام شخص',14,'']]},
+{c:'المواقف المحرجة',d:'سهل',q:'اذكر موقفًا محرجًا يحدث في العرس',a:[
+['سقوط العروس',30,'التعثر'],['كسر كأس',22,''],
+['تصوير سيئ',18,''],['مشاجرة',16,''],['تأخر وصول الضيوف',14,'']]},
+{c:'المواقف المضحكة',d:'سهل',q:'اذكر شيئًا يضحك الناس في التجمعات',a:[
+['النكت',30,'النكات'],['المواقف القديمة',22,'مواقف طريفة'],
+['تقليد الآخرين',18,'محاكاة'],['ضحكة الأطفال',16,''],
+['المواقف العفوية',14,'']]},
+{c:'المواقف المضحكة',d:'سهل',q:'اذكر شيئًا يضحك فيه الشخص وحده',a:[
+['ميم على الإنترنت',28,'كوميك'],['فيديو مضحك',24,'مقطع'],
+['ذكريات طريفة',18,'مواقف'],['حديث نفسي',16,''],['رسالة صديق',14,'']]},
+{c:'المواقف المضحكة',d:'متوسط',q:'اذكر شيئًا يضحك فيه الناس في العمل',a:[
+['خطأ في البريد الإلكتروني',28,'رسالة'],['حركة مدير',22,'المدير'],
+['قهوة مسكوبة',18,'الكوب'],['اجتماع ممّل',16,''],['ملابس غريبة',16,'']]},
+{c:'المواقف المضحكة',d:'سهل',q:'اذكر شيئًا يضحك الأطفال',a:[
+['الألعاب',28,'اللعب'],['الرسوم المتحركة',24,'كرتون'],
+['الأصوات الغريبة',18,'صوت مضحك'],['المرايا',16,''],['الحيوانات',14,'']]},
+{c:'المواقف المضحكة',d:'متوسط',q:'اذكر موقفًا طريفًا يحدث في السفر',a:[
+['الحقيبة تنفتح',28,'الشنطة'],['الضياع في المطار',22,'التوهان'],
+['لغة مختلفة',18,'الحوار'],['نوم في الطائرة',18,'الطيارة'],['صورة طريفة',14,'']]},
+{c:'المدرسة والامتحانات',d:'سهل',q:'اذكر شيئًا ينساه الطالب في يوم الامتحان',a:[
+['القلم',28,'الأقلام'],['الآلة الحاسبة',22,'الحاسبة'],
+['بطاقة الجلوس',18,'الهوية'],['الممحاة',18,'الاستيكة'],['الكتاب',14,'']]},
+{c:'المدرسة والامتحانات',d:'سهل',q:'اذكر سببًا يجعل الطالب يتأخر عن المدرسة',a:[
+['النوم',30,'السهر'],['المواصلات',22,'الباص'],
+['ترتيب الحقيبة',18,'الشنطة'],['الفطور',16,'الأكل'],['الطريق',14,'']]},
+{c:'المدرسة والامتحانات',d:'متوسط',q:'اذكر شيئًا يخافه الطالب من الأستاذ',a:[
+['الاختبار المفاجئ',30,'امتحان'],['الاتصال بالأهل',22,'المكالمة'],
+['الطرد من الصف',18,'الإخراج'],['الرسوب',16,'العلامات'],['الصوت العالي',14,'']]},
+{c:'المدرسة والامتحانات',d:'سهل',q:'اذكر شيئًا يفعله الطلاب في الاستراحة',a:[
+['الأكل',30,'السندويشات,الفطور'],['اللعب',22,'الحركة'],
+['الحكي',18,'السوالف'],['شراء من المقصف',16,'الكافتيريا'],['المذاكرة السريعة',14,'']]},
+{c:'المدرسة والامتحانات',d:'متوسط',q:'اذكر شيئًا يفعله الطالب قبل الامتحان بساعة',a:[
+['مراجعة سريعة',30,'دراسة أخيرة'],['الدعاء',20,''],
+['الأكل',18,'الفطور'],['شرب القهوة',16,'منبه'],['النوم قليلًا',16,'']]},
+{c:'المدرسة والامتحانات',d:'سهل',q:'اذكر مادة يحبها الطلاب عادةً',a:[
+['الرياضة',28,'التربية الرياضية'],['الفن',22,'الرسم'],
+['الحاسوب',18,'الكمبيوتر'],['اللغة العربية',18,'العربي'],['العلوم',14,'']]},
+{c:'المدرسة والامتحانات',d:'متوسط',q:'اذكر سببًا يجعل الطالب ينسى الواجب',a:[
+['انشغاله باللعب',30,'اللعب'],['نسيان الكتاب',22,'الدفتر'],
+['الانشغال بالتلفون',18,'الهاتف'],['المشاغل العائلية',16,''],['عدم فهمه',14,'']]},
+{c:'المدرسة والامتحانات',d:'سهل',q:'اذكر أفضل ذكرى من أيام المدرسة',a:[
+['الرحلات',30,'الرحلة'],['الاستراحة',22,'الفسحة'],
+['الأصدقاء',18,''],['المعلم الطيب',16,''],['الحفلات',14,'']]},
+{c:'المدرسة والامتحانات',d:'متوسط',q:'اذكر ما يفعله الطالب عند دخوله الصف',a:[
+['يسلم على أصدقائه',30,''],['يجلس في مكانه',22,''],
+['يراجع الدرس',18,''],['يرتب أغراضه',16,''],['ينظر للسبورة',14,'']]},
+{c:'الجامعة والحياة الطلابية',d:'سهل',q:'اذكر شيئًا يفعله الطالب في الجامعة عادةً',a:[
+['حضور المحاضرات',28,'الدوام'],['الالتقاء بالأصحاب',22,'الشلة'],
+['الأكل في الكافتيريا',18,'الكانتين'],['المذاكرة في المكتبة',18,''],['السهر',14,'']]},
+{c:'الجامعة والحياة الطلابية',d:'متوسط',q:'اذكر سببًا يجعل الطالب يتغيب عن المحاضرة',a:[
+['السهر',28,'النوم'],['الامتحانات',22,'ضغط'],
+['المواصلات',18,'الباص'],['ملل المحاضرة',18,''],['الظروف الصحية',14,'']]},
+{c:'الجامعة والحياة الطلابية',d:'سهل',q:'اذكر شيئًا يحتاجه الطالب في الجامعة',a:[
+['اللابتوب',30,'الكمبيوتر'],['الدفاتر',22,'الكتب,الأوراق'],
+['الهاتف',18,'الموبايل'],['بطاقة الجامعة',16,'الهوية'],['المال',14,'']]},
+{c:'الجامعة والحياة الطلابية',d:'متوسط',q:'اذكر شيئًا يقلق طالب الجامعة',a:[
+['العلامات',30,'التقديرات,المعدل'],['الرسوم',22,'القسط'],
+['المستقبل',18,'الوظيفة'],['الوقت',16,''],['المواصلات',14,'']]},
+{c:'الجامعة والحياة الطلابية',d:'سهل',q:'اذكر مكانًا يجتمع فيه الطلاب داخل الجامعة',a:[
+['المكتبة',28,''],['الكافتيريا',24,'الكانتين'],
+['الحديقة',18,'الساحة'],['قاعة المحاضرات',18,''],['بوابة الجامعة',12,'']]},
+{c:'الوظائف ومقابلات العمل',d:'سهل',q:'اذكر شيئًا يفعله الشخص قبل مقابلة عمل',a:[
+['تجهيز السيرة الذاتية',30,'CV'],['اختيار الملابس',24,'اللبس'],
+['البحث عن الشركة',18,'الاستعداد'],['الوصول مبكرًا',16,''],['الاسترخاء',12,'']]},
+{c:'الوظائف ومقابلات العمل',d:'متوسط',q:'اذكر سؤالًا يُسأل في مقابلات العمل',a:[
+['تكلم عن نفسك',30,'عرّف عنك'],['نقاط قوتك',22,'القوة والضعف'],
+['لماذا تريد الوظيفة',18,'السبب'],['راتبك المتوقع',16,'الراتب'],
+['أين ترى نفسك بعد خمس سنوات',14,'']]},
+{c:'الوظائف ومقابلات العمل',d:'سهل',q:'اذكر شيئًا يجعل بيئة العمل سعيدة',a:[
+['الاحترام',28,''],['التقدير',22,''],
+['التعاون',18,'الفريق'],['المرونة',18,''],['الاستقرار',14,'']]},
+{c:'الوظائف ومقابلات العمل',d:'متوسط',q:'اذكر سببًا يجعل الشخص يترك وظيفته',a:[
+['الراتب القليل',30,'الفلوس'],['المدير السيئ',22,''],
+['عدم التقدير',18,''],['المسافة',16,'المواصلات'],['بيئة سيئة',14,'']]},
+{c:'الوظائف ومقابلات العمل',d:'سهل',q:'اذكر مهارة يبحث عنها أصحاب العمل',a:[
+['التواصل',28,'الحكي'],['العمل الجماعي',22,'التعاون'],
+['حل المشكلات',18,''],['الالتزام',18,''],['الإبداع',14,'']]},
+{c:'الوظائف ومقابلات العمل',d:'متوسط',q:'اذكر شيئًا يُحسّن أداء الموظف',a:[
+['التقدير',28,'التحفيز'],['التدريب',22,''],
+['بيئة مريحة',18,''],['الاستراحة',16,''],['وضوح المهام',16,'']]},
+{c:'الوظائف ومقابلات العمل',d:'سهل',q:'اذكر أول شيء تفعله عند الوصول للعمل',a:[
+['تشغيل الحاسوب',30,''],['تحية الزملاء',22,''],
+['شرب القهوة',18,''],['مراجعة البريد',16,''],['تنظيم المكتب',14,'']]},
+{c:'الوظائف ومقابلات العمل',d:'متوسط',q:'اذكر ما يجعل الاجتماع في العمل سيئًا',a:[
+['طويل جدًا',30,'يطول'],['بلا هدف',22,''],
+['يخرج عن الموضوع',18,''],['تكرار الكلام',16,''],['مقاطعة الآخرين',14,'']]},
+{c:'الطعام والطبخ',d:'سهل',q:'اذكر أكلة يطلبها الناس عندما لا يرغبون في الطبخ',a:[
+['شاورما',30,'شاورمة'],['بيتزا',25,'بيتزة'],
+['برغر',20,'برجر,همبرغر'],['فلافل',15,''],['دجاج مشوي',10,'دجاج']]},
+{c:'الطعام والطبخ',d:'سهل',q:'اذكر شيئًا يستخدم في المطبخ يوميًا',a:[
+['المقلاة',28,'المقلة'],['القدر',22,'طنجرة'],
+['السكين',18,'سكينة'],['الملح',18,''],['البهارات',14,'']]},
+{c:'الطعام والطبخ',d:'متوسط',q:'اذكر مكونًا أساسيًا في معظم الأطباق العربية',a:[
+['الأرز',28,'رز'],['الزيت',22,'زيت الزيتون'],
+['البصل',18,'بصلة'],['الطماطم',18,'بندورة'],['البهارات',14,'']]},
+{c:'الطعام والطبخ',d:'سهل',q:'اذكر طبقًا يُقدَّم في العزائم الكبيرة',a:[
+['منسف',30,'المنسف'],['كبسة',22,''],
+['مقلوبة',18,''],['مشاوي',16,'كباب'],['مجبوس',14,'']]},
+{c:'الطعام والطبخ',d:'سهل',q:'اذكر شيئًا يشتريه الناس من السوق لتحضير الفطور',a:[
+['الخبز',30,'خبز,كماج'],['الجبنة',22,''],
+['البيض',18,''],['الزيتون',16,''],['اللبن',14,'']]},
+{c:'الطعام والطبخ',d:'متوسط',q:'اذكر شيئًا يجعل الطبخة غير ناجحة',a:[
+['الملح الزائد',30,'ملح زيادة'],['الحرارة العالية',22,''],
+['عدم التقليب',18,''],['نقص المكونات',16,''],['الحليب المحروق',14,'']]},
+{c:'الطعام والطبخ',d:'سهل',q:'اذكر حلويات عربية مشهورة',a:[
+['كنافة',30,''],['بقلاوة',24,''],['بسبوسة',18,''],['قطايف',16,''],['مهلبية',12,'']]},
+{c:'الطعام والطبخ',d:'سهل',q:'اذكر وجبة يحبها الأطفال عادةً',a:[
+['بيتزا',30,''],['برغر',22,''],['معكرونة',18,'باستا'],
+['دجاج مقلي',16,''],['بطاطا مقلية',14,'شيبس']]},
+{c:'الطعام والطبخ',d:'متوسط',q:'اذكر شيئًا يُقدَّم للضيوف عادةً',a:[
+['قهوة',30,''],['شاي',22,''],['حلويات',18,''],['فواكه',16,''],['مكسرات',14,'']]},
+{c:'المطاعم والمقاهي',d:'سهل',q:'اذكر نوع مطعم يحبه الناس',a:[
+['مطعم مشاوي',28,'كباب'],['مطعم وجبات سريعة',24,'برغر'],
+['مطعم بحري',18,'سمك'],['مطعم إيطالي',16,'بيتزا,باستا'],['مطعم عربي',14,'']]},
+{c:'المطاعم والمقاهي',d:'سهل',q:'اذكر مشروبًا يُطلب في المقهى',a:[
+['قهوة',30,'لاتيه,إسبريسو'],['شاي',24,'شاي أحمر'],
+['عصير طازج',18,''],['موكا',16,''],['شاي مثلج',12,'']]},
+{c:'المطاعم والمقاهي',d:'متوسط',q:'اذكر شيئًا يزعج الناس في المطعم',a:[
+['الخدمة البطيئة',30,''],['الضجيج',22,'الصوت'],
+['أسعار مرتفعة',18,'غالي'],['طعام بارد',16,''],['ازدحام',14,'']]},
+{c:'المطاعم والمقاهي',d:'سهل',q:'اذكر شيئًا يحبه الناس في المقاهي',a:[
+['الجلسة',28,''],['الأجواء',22,''],['الأصدقاء',18,''],
+['الموسيقى',16,''],['المشروبات',16,'']]},
+{c:'المطاعم والمقاهي',d:'متوسط',q:'اذكر سببًا لاختيار مطعم معين',a:[
+['جودة الطعام',30,'الأكل'],['السعر',22,''],
+['المكان',18,'الموقع'],['الخدمة',16,''],['التقييمات',14,'']]},
+{c:'الأردن والعادات الأردنية',d:'سهل',q:'اذكر مدينة أردنية مشهورة بالسياحة',a:[
+['البتراء',30,''],['العقبة',22,''],['جرش',18,''],['عمان',16,''],['مادبا',14,'']]},
+{c:'الأردن والعادات الأردنية',d:'سهل',q:'اذكر طبقًا أردنيًا مشهورًا',a:[
+['منسف',40,'المنسف'],['مقلوبة',20,''],['مسخن',18,''],['مشاوي',12,''],['كنافة نابلسية',10,'']]},
+{c:'الأردن والعادات الأردنية',d:'متوسط',q:'اذكر شيئًا يفعله الأردنيون في رمضان',a:[
+['الإفطار الجماعي',28,''],['زيارة الأهل',22,''],['المسحراتي',18,''],
+['قطايف',18,''],['صلاة التراويح',14,'']]},
+{c:'الأردن والعادات الأردنية',d:'سهل',q:'اذكر شيئًا تشتهر به الأردن',a:[
+['البتراء',30,''],['البحر الميت',22,''],['المنسف',18,''],
+['وادي رم',16,''],['الكرك',14,'']]},
+{c:'الأردن والعادات الأردنية',d:'متوسط',q:'اذكر عادة أردنية في الأعراس',a:[
+['الدبكة',30,''],['الزغاريد',22,''],['العرضة',18,''],
+['المباركة',16,''],['تقديم القهوة',14,'']]},
+{c:'الأردن والعادات الأردنية',d:'سهل',q:'اذكر أكلة شعبية أردنية',a:[
+['منسف',35,'المنسف'],['مقلوبة',25,''],['مسخن',18,''],['مجدرة',12,''],['كبسة',10,'']]},
+{c:'الأردن والعادات الأردنية',d:'سهل',q:'اذكر مكانًا سياحيًا في الأردن',a:[
+['البتراء',30,''],['البحر الميت',25,''],['وادي رم',20,''],['جرش',15,''],['العقبة',10,'']]},
+{c:'الأردن والعادات الأردنية',d:'سهل',q:'اذكر شيئًا يفعله الأردنيون في الأعراس',a:[
+['دبكة',30,'دبكه'],['عرضة',22,''],['منسف',18,''],['زغاريد',16,''],['قهوة سادة',14,'']]},
+{c:'الأردن والعادات الأردنية',d:'متوسط',q:'اذكر شيئًا تشتهر به مدينة عمان',a:[
+['المدرج الروماني',28,''],['جبل القلعة',22,''],['وسط البلد',20,''],
+['الجبل الأخضر',16,''],['الأسواق',14,'']]},
+{c:'الأردن والعادات الأردنية',d:'سهل',q:'اذكر كلمة أردنية تعني جيد',a:[
+['منيح',35,''],['زين',25,''],['حلو',20,''],['طيب',10,''],['تمام',10,'']]},
+{c:'الأردن والعادات الأردنية',d:'متوسط',q:'اذكر شيئًا يفعله الأردنيون في الشتاء',a:[
+['شرب السحلب',30,''],['الكشتات',22,''],['المنسف',18,''],
+['القهوة السادة',16,''],['البوظة بالحليب',14,'']]},
+{c:'فلسطين وبلاد الشام',d:'سهل',q:'اذكر مدينة سورية مشهورة',a:[
+['دمشق',30,''],['حلب',24,''],['حمص',18,''],['اللاذقية',16,''],['تدمر',12,'']]},
+{c:'فلسطين وبلاد الشام',d:'سهل',q:'اذكر مدينة لبنانية مشهورة',a:[
+['بيروت',30,''],['طرابلس',22,''],['صيدا',18,''],['جبيل',16,''],['زحلة',14,'']]},
+{c:'فلسطين وبلاد الشام',d:'سهل',q:'اذكر طبقًا شاميًا مشهورًا',a:[
+['فتة',28,''],['مجدرة',22,''],['شاورما',18,''],['كبة',16,''],['ملوخية',16,'']]},
+{c:'فلسطين وبلاد الشام',d:'متوسط',q:'اذكر مدينة فلسطينية مشهورة',a:[
+['القدس',30,''],['غزة',22,''],['نابلس',18,''],['حيفا',16,''],['رام الله',14,'']]},
+{c:'فلسطين وبلاد الشام',d:'سهل',q:'اذكر شيئًا تشتهر به بلاد الشام',a:[
+['المأكولات',28,'الأكل'],['الطبيعة',22,''],['التاريخ',18,''],
+['الحرف اليدوية',16,''],['الموسيقى',16,'']]},
+{c:'فلسطين وبلاد الشام',d:'سهل',q:'اذكر أكلة فلسطينية مشهورة',a:[
+['مقلوبة',28,''],['مسخن',22,''],['مفتول',18,''],['كبة',16,''],['فتة',16,'']]},
+{c:'فلسطين وبلاد الشام',d:'متوسط',q:'اذكر مدينة سورية أثرية',a:[
+['تدمر',30,''],['بصرى',22,''],['أفاميا',18,''],['حلب القديمة',16,''],['دمشق القديمة',14,'']]},
+{c:'الخليج العربي',d:'سهل',q:'اذكر مدينة خليجية مشهورة',a:[
+['دبي',30,''],['الرياض',22,''],['الدوحة',18,''],['الكويت',16,''],['مسقط',14,'']]},
+{c:'الخليج العربي',d:'سهل',q:'اذكر طبقًا خليجيًا مشهورًا',a:[
+['كبسة',30,''],['مجبوس',22,''],['هريس',18,''],['مضغوط',16,''],['مرقوق',14,'']]},
+{c:'الخليج العربي',d:'متوسط',q:'اذكر شيئًا تشتهر به الخليج',a:[
+['النفط',30,'البترول'],['الصحراء',22,''],['التمور',18,''],
+['اللؤلؤ',16,''],['الثياب التقليدية',14,'']]},
+{c:'الخليج العربي',d:'سهل',q:'اذكر شيئًا يفعله الخليجيون في العيد',a:[
+['زيارة الأهل',30,''],['الملابس الجديدة',22,''],['العيدية',18,''],
+['الحلويات',16,''],['الترحيب',14,'']]},
+{c:'الخليج العربي',d:'متوسط',q:'اذكر شيئًا يميز اللهجة الخليجية',a:[
+['كلمات خاصة',30,'مفردات'],['النطق',22,''],['التعبيرات',18,''],
+['الأمثال',16,''],['الأسلوب',14,'']]},
+{c:'الخليج العربي',d:'سهل',q:'اذكر شيئًا يفعله الخليجيون في رمضان',a:[
+['القرقيعان',30,''],['الجلسة العائلية',22,''],['الهريس',18,''],['اللقيمات',16,''],['التراويح',14,'']]},
+{c:'الخليج العربي',d:'سهل',q:'اذكر أكلة خليجية مشهورة',a:[
+['كبسة',30,''],['مجبوس',22,''],['هريس',18,''],['لقيمات',16,''],['مرقوق',14,'']]},
+{c:'مصر وشمال أفريقيا',d:'سهل',q:'اذكر شيئًا تشتهر به مصر',a:[
+['الأهرامات',30,''],['النيل',22,''],['الكشري',18,''],
+['السينما',16,''],['المتحف المصري',14,'']]},
+{c:'مصر وشمال أفريقيا',d:'سهل',q:'اذكر طبقًا مصريًا مشهورًا',a:[
+['كشري',30,''],['ملوخية',22,''],['فول مدمس',18,''],['طعمية',16,''],['محشي',14,'']]},
+{c:'مصر وشمال أفريقيا',d:'متوسط',q:'اذكر مدينة مغربية مشهورة',a:[
+['الدار البيضاء',30,'كازابلانكا'],['مراكش',22,''],['الرباط',18,''],['فاس',16,''],['طنجة',14,'']]},
+{c:'مصر وشمال أفريقيا',d:'سهل',q:'اذكر شيئًا يفعله المصريون في رمضان',a:[
+['الفوانيس',30,''],['المسحراتي',22,''],['الإفطار الجماعي',18,''],
+['الكحك',16,''],['التراويح',14,'']]},
+{c:'مصر وشمال أفريقيا',d:'متوسط',q:'اذكر شيئًا تشتهر به تونس',a:[
+['الشواطئ',28,''],['الكسكسي',22,''],['قرطاج',18,''],['زيت الزيتون',18,''],['الفخار',14,'']]},
+{c:'الثقافة العربية',d:'سهل',q:'اذكر أديبًا عربيًا مشهورًا',a:[
+['نجيب محفوظ',28,''],['جبران خليل جبران',22,''],['محمود درويش',18,''],
+['أحمد شوقي',16,''],['طه حسين',16,'']]},
+{c:'الثقافة العربية',d:'سهل',q:'اذكر شيئًا يميز الثقافة العربية',a:[
+['الكرم',30,''],['الضيافة',22,''],['الشعر',18,''],['العائلة',16,''],['الأمثال',14,'']]},
+{c:'الثقافة العربية',d:'متوسط',q:'اذكر أداة موسيقية عربية',a:[
+['العود',30,''],['الناي',22,''],['القانون',18,''],['الربابة',16,''],['الدف',14,'']]},
+{c:'الثقافة العربية',d:'سهل',q:'اذكر مظهرًا من مظاهر الضيافة العربية',a:[
+['تقديم القهوة',30,''],['التمر',22,''],['الماء',18,''],['الترحيب',16,''],['الجلوس مع الضيف',14,'']]},
+{c:'الثقافة العربية',d:'متوسط',q:'اذكر مهرجانًا ثقافيًا عربيًا',a:[
+['معرض الكتاب',28,''],['مهرجان جرش',22,''],['مهرجان القرين',18,''],
+['مهرجان دبي',18,''],['مهرجان قرطاج',14,'']]},
+{c:'السفر والسياحة',d:'سهل',q:'اذكر شيئًا يأخذه الناس معهم عند السفر',a:[
+['الملابس',28,'هدوم,ألبسة'],['الشاحن',22,'تشارجر'],['جواز السفر',20,'باسبور'],
+['الهاتف',16,'الموبايل'],['النقود',14,'المال']]},
+{c:'السفر والسياحة',d:'سهل',q:'اذكر وجهة سياحية يحبها العرب',a:[
+['تركيا',30,''],['مصر',22,''],['دبي',18,''],['ماليزيا',16,''],['أوروبا',14,'']]},
+{c:'السفر والسياحة',d:'متوسط',q:'اذكر شيئًا يزعج المسافر',a:[
+['تأخير الطائرة',30,''],['فقدان الحقيبة',22,''],['الزحام',18,''],
+['الأكل السيئ',16,''],['السعر المرتفع',14,'']]},
+{c:'السفر والسياحة',d:'سهل',q:'اذكر نشاطًا يفعله السياح',a:[
+['التصوير',30,''],['السباحة',22,''],['التسوق',18,''],
+['زيارة المتاحف',16,''],['تجربة الطعام',14,'']]},
+{c:'السفر والسياحة',d:'متوسط',q:'اذكر سببًا لاختيار وجهة سياحية معينة',a:[
+['الطبيعة',28,''],['السعر',22,''],['الأمان',18,''],['القرب',16,''],['الثقافة',16,'']]},
+{c:'السفر والسياحة',d:'سهل',q:'اذكر شيئًا يُنسى في الفندق عادةً',a:[
+['الشاحن',30,'التلفون شاحن'],['الملابس',22,''],['المحفظة',18,''],
+['فرشاة الأسنان',16,''],['الجواز',14,'']]},
+{c:'السفر والسياحة',d:'متوسط',q:'اذكر أفضل وقت للسفر في السنة',a:[
+['الربيع',30,''],['الخريف',22,''],['الصيف',18,''],['الشتاء',16,''],['العطل',14,'']]},
+{c:'السفر والسياحة',d:'سهل',q:'اذكر سببًا لاختيار الطائرة في السفر',a:[
+['السرعة',30,''],['الراحة',22,''],['المسافة الطويلة',18,''],['الأمان',16,''],['المناظر',14,'']]},
+{c:'المطارات والفنادق',d:'سهل',q:'اذكر إجراءً في المطار',a:[
+['تسجيل الوصول',30,'الcheck-in'],['فحص الجوازات',22,''],['التفتيش',18,''],
+['استلام الحقائب',16,''],['الصعود للطائرة',14,'']]},
+{c:'المطارات والفنادق',d:'سهل',q:'اذكر خدمة تقدمها الفنادق',a:[
+['الإفطار',30,''],['التنظيف',22,''],['واي فاي',18,'الإنترنت'],
+['مسبح',16,''],['خدمة الغرف',14,'']]},
+{c:'المطارات والفنادق',d:'متوسط',q:'اذكر شيئًا قد يفقده المسافر في المطار',a:[
+['الجواز',30,'الباسبور'],['بطاقة الصعود',22,''],['الحقيبة',18,'الشنطة'],
+['الهاتف',16,''],['المحفظة',14,'']]},
+{c:'المطارات والفنادق',d:'سهل',q:'اذكر نوع غرفة فندقية',a:[
+['غرفة مفردة',28,''],['غرفة مزدوجة',24,''],['جناح',18,'سويت'],
+['غرفة عائلية',16,''],['غرفة بإطلالة',14,'']]},
+{c:'المطارات والفنادق',d:'متوسط',q:'اذكر سببًا لاختيار فندق معين',a:[
+['الموقع',28,''],['السعر',22,''],['النظافة',18,''],['التقييمات',16,''],['الخدمات',16,'']]},
+{c:'الهواتف والتكنولوجيا',d:'سهل',q:'اذكر شيئًا يفعله الناس على هواتفهم يوميًا',a:[
+['التواصل الاجتماعي',30,'السوشيال'],['مشاهدة فيديوهات',22,'يوتيوب'],['الدردشة',18,'واتساب'],
+['التصوير',16,''],['البحث',14,'جوجل']]},
+{c:'الهواتف والتكنولوجيا',d:'سهل',q:'اذكر تطبيقًا يستخدمه الناس كثيرًا',a:[
+['واتساب',30,''],['يوتيوب',22,''],['إنستغرام',18,''],['تيك توك',16,''],['فيسبوك',14,'']]},
+{c:'الهواتف والتكنولوجيا',d:'متوسط',q:'اذكر مشكلة شائعة في الهواتف',a:[
+['البطارية',30,'الشحن'],['البطء',22,'التعليق'],['المساحة',18,'التخزين'],
+['الشاشة',16,''],['الكاميرا',14,'']]},
+{c:'الهواتف والتكنولوجيا',d:'سهل',q:'اذكر شيئًا تحتاجه عند شراء هاتف جديد',a:[
+['الكاميرا',28,''],['البطارية',22,''],['المعالج',18,''],['الذاكرة',18,''],['السعر',14,'']]},
+{c:'الهواتف والتكنولوجيا',d:'متوسط',q:'اذكر سببًا لتغيير الهاتف',a:[
+['البطارية تضعف',30,''],['الشاشة مكسورة',22,''],['بطء الجهاز',18,''],
+['تحديثات',16,''],['موضة',14,'']]},
+{c:'الهواتف والتكنولوجيا',d:'سهل',q:'اذكر أول تطبيق تفتحه صباحًا',a:[
+['واتساب',30,''],['إنستغرام',22,''],['يوتيوب',18,''],['البريد',16,''],['فيسبوك',14,'']]},
+{c:'الهواتف والتكنولوجيا',d:'متوسط',q:'اذكر ما يفعله الناس عند انقطاع الإنترنت',a:[
+['ينتظرون عودته',30,''],['ينامون',22,''],['يقرؤون كتابًا',18,''],
+['يلعبون لعبة أوفلاين',16,''],['يتصلون بالمزود',14,'']]},
+{c:'الإنترنت ووسائل التواصل',d:'سهل',q:'اذكر شيئًا يفعله الناس على وسائل التواصل',a:[
+['نشر الصور',28,''],['مشاهدة الفيديوهات',22,'ريلز'],['التعليق',18,''],
+['متابعة الأخبار',18,''],['الدردشة',14,'']]},
+{c:'الإنترنت ووسائل التواصل',d:'متوسط',q:'اذكر شيئًا يزعج مستخدمي وسائل التواصل',a:[
+['الإعلانات',28,''],['الأخبار الكاذبة',22,''],['التنمر',18,''],
+['المحتوى المكرر',16,''],['الضجيج',16,'']]},
+{c:'الإنترنت ووسائل التواصل',d:'سهل',q:'اذكر منصة لمشاركة الفيديوهات',a:[
+['يوتيوب',30,''],['تيك توك',24,''],['إنستغرام',18,''],['فيسبوك',16,''],['سناب شات',12,'']]},
+{c:'الإنترنت ووسائل التواصل',d:'متوسط',q:'اذكر سببًا لإغلاق الحساب',a:[
+['التنمر',28,''],['محتوى مخالف',22,''],['قرصنة',18,''],['انتحال شخصية',18,''],['إزعاج',14,'']]},
+{c:'الإنترنت ووسائل التواصل',d:'سهل',q:'اذكر شيئًا يجعلك تتابع حسابًا معينًا',a:[
+['المحتوى المفيد',30,''],['الترفيه',22,''],['الأخبار',18,''],['الإلهام',16,''],['الجمال',14,'']]},
+{c:'الألعاب الإلكترونية',d:'سهل',q:'اذكر لعبة إلكترونية مشهورة',a:[
+['فورتنايت',28,''],['ماينكرافت',22,''],['بوبجي',18,''],['كول أوف ديوتي',16,''],['فيفا',16,'']]},
+{c:'الألعاب الإلكترونية',d:'سهل',q:'اذكر شيئًا يحتاجه اللاعب',a:[
+['الإنترنت',30,''],['الكمبيوتر',22,''],['يد التحكم',18,'جويستيك'],['الوقت',16,''],['المهارة',14,'']]},
+{c:'الألعاب الإلكترونية',d:'متوسط',q:'اذكر سببًا لإدمان الألعاب',a:[
+['المتعة',30,''],['التحدي',22,''],['الأصدقاء',18,''],['الهروب من الواقع',16,''],['التنافس',14,'']]},
+{c:'الألعاب الإلكترونية',d:'سهل',q:'اذكر نوع لعبة يحبها الناس',a:[
+['لعبة إطلاق نار',28,'شوتر'],['لعبة سباق',22,''],['لعبة مغامرات',18,''],['لعبة رياضية',18,''],['لعبة ألغاز',14,'']]},
+{c:'الألعاب الإلكترونية',d:'متوسط',q:'اذكر خطرًا من الإفراط في الألعاب',a:[
+['ضعف النظر',30,''],['العزلة',22,''],['إهمال الدراسة',18,''],['قلة النوم',16,''],['الجلوس الطويل',14,'']]},
+{c:'كرة القدم والرياضة',d:'سهل',q:'اذكر فريقًا عربيًا مشهورًا',a:[
+['الأهلي',30,''],['الزمالك',22,''],['الهلال',18,''],['النصر',16,''],['الوحدات',14,'']]},
+{c:'كرة القدم والرياضة',d:'سهل',q:'اذكر لاعبًا عربيًا مشهورًا',a:[
+['محمد صلاح',30,''],['محمود تريزيجيه',22,''],['ياسر القحطاني',18,''],['حسام حسن',16,''],['سالم الدوسري',14,'']]},
+{c:'كرة القدم والرياضة',d:'متوسط',q:'اذكر شيئًا يفعله المشجعون في المباراة',a:[
+['الهتاف',30,''],['رفع الأعلام',22,''],['التصفيق',18,''],['تلوين الوجه',16,''],['الرقص',14,'']]},
+{c:'كرة القدم والرياضة',d:'سهل',q:'اذكر بطولة كروية مشهورة',a:[
+['كأس العالم',30,'المونديال'],['دوري الأبطال',22,''],['كأس آسيا',18,''],['كأس أفريقيا',16,''],['الدوري المحلي',14,'']]},
+{c:'كرة القدم والرياضة',d:'متوسط',q:'اذكر سببًا لخسارة فريق',a:[
+['الدفاع الضعيف',30,''],['إصابات',22,''],['قرارات الحكم',18,''],['سوء التوفيق',16,''],['نقص التركيز',14,'']]},
+{c:'كرة القدم والرياضة',d:'سهل',q:'اذكر ما يفعله المشجع عند خسارة فريقه',a:[
+['يحزن',30,''],['يلوم اللاعبين',22,''],['يتوقف عن المتابعة',18,''],['يشجع غدًا',16,''],['ينتقد الحكم',14,'']]},
+{c:'كرة القدم والرياضة',d:'متوسط',q:'اذكر سببًا محبوبًا لممارسة الرياضة',a:[
+['الصحة',30,''],['الترفيه',22,''],['الاسترخاء',18,''],['الصداقة',16,''],['المنافسة',14,'']]},
+{c:'الأفلام والمسلسلات',d:'سهل',q:'اذكر نوع فيلم يحبه الناس',a:[
+['كوميدي',28,''],['أكشن',24,''],['دراما',18,''],['رعب',16,''],['رومانسي',14,'']]},
+{c:'الأفلام والمسلسلات',d:'سهل',q:'اذكر ممثلًا عربيًا مشهورًا',a:[
+['عادل إمام',28,''],['نور الشريف',22,''],['أحمد حلمي',18,''],['جمال سليمان',16,''],['نادين نسيب نجيم',16,'']]},
+{c:'الأفلام والمسلسلات',d:'متوسط',q:'اذكر مسلسلًا رمضانيًا يتابعه الناس',a:[
+['مسلسلات مدبلجة',28,''],['دراما سورية',22,''],['دراما مصرية',18,''],['دراما خليجية',16,''],['كوميديا',16,'']]},
+{c:'الأفلام والمسلسلات',d:'سهل',q:'اذكر شيئًا يفعله المشاهد أثناء مشاهدة فيلم',a:[
+['تناول الفشار',30,''],['مشاهدة مع الأصدقاء',22,''],['التعليق',18,''],['مشاهدة متواصلة',16,''],['التوقف للفاصل',14,'']]},
+{c:'الأفلام والمسلسلات',d:'متوسط',q:'اذكر شيئًا يجعل فيلمًا ناجحًا',a:[
+['القصة',30,''],['التمثيل',22,''],['الإخراج',18,''],['الموسيقى',16,''],['المؤثرات',14,'']]},
+{c:'الطفولة والذكريات',d:'سهل',q:'اذكر لعبة أطفال مشهورة',a:[
+['الغميضة',28,''],['الحجلة',22,''],['نطة الحبل',18,''],['الكراسي',16,''],['الطائرة الورقية',16,'']]},
+{c:'الطفولة والذكريات',d:'سهل',q:'اذكر شيئًا يفعله الأطفال في الصيف',a:[
+['السباحة',30,''],['اللعب بالخارج',22,''],['المخيمات',18,''],['زيارة الأهل',16,''],['مشاهدة أفلام كرتون',14,'']]},
+{c:'الطفولة والذكريات',d:'متوسط',q:'اذكر ذكرى جميلة من المدرسة',a:[
+['رحلات مدرسية',30,''],['الأصدقاء',22,''],['حفلات نهاية العام',18,''],['المعلم الطيب',16,''],['اللعب في الاستراحة',14,'']]},
+{c:'الطفولة والذكريات',d:'سهل',q:'اذكر حلوى يحبها الأطفال',a:[
+['شوكولاتة',30,''],['مصاص',22,''],['علكة',18,''],['كيك',16,''],['مثلجات',14,'']]},
+{c:'الطفولة والذكريات',d:'متوسط',q:'اذكر شيئًا كان يشتريه الأطفال من البقالة',a:[
+['حلويات',30,''],['مصاص',22,''],['شيبس',18,''],['عصير',16,''],['ألعاب صغيرة',14,'']]},
+{c:'التسوق والمصروف',d:'سهل',q:'اذكر شيئًا يشتريه الناس بكثرة',a:[
+['الطعام',30,''],['الملابس',22,''],['الهاتف',18,''],['الهدايا',16,''],['العطور',14,'']]},
+{c:'التسوق والمصروف',d:'متوسط',q:'اذكر سببًا لتجاوز الميزانية في التسوق',a:[
+['العروض',30,'التخفيضات'],['الشراء العاطفي',22,''],['قلة التخطيط',18,''],['مرافقة الأصدقاء',16,''],['الإعلانات',14,'']]},
+{c:'التسوق والمصروف',d:'سهل',q:'اذكر مكانًا يذهب إليه الناس للتسوق',a:[
+['المول',30,''],['السوق',22,''],['المتجر الإلكتروني',18,''],['السوق الشعبي',16,''],['الأسواق الخارجية',14,'']]},
+{c:'التسوق والمصروف',d:'متوسط',q:'اذكر شيئًا يساعد على توفير المال',a:[
+['الميزانية',30,''],['قائمة المشتريات',22,''],['تجنب العروض',18,''],['الادخار التلقائي',16,''],['التسوق بالكاش',14,'']]},
+{c:'التسوق والمصروف',d:'سهل',q:'اذكر شيئًا يشتريه الطالب من مصروفه',a:[
+['سندويش',30,''],['مشروب',22,''],['قرطاسية',18,''],['لعبة',16,''],['حلويات',14,'']]},
+{c:'المنزل والحياة اليومية',d:'سهل',q:'اذكر مهمة منزلية يومية',a:[
+['غسل الصحون',30,''],['ترتيب المنزل',22,''],['غسل الملابس',18,''],['الطبخ',16,''],['كنس الأرض',14,'']]},
+{c:'المنزل والحياة اليومية',d:'سهل',q:'اذكر شيئًا يفعله الناس عند تنظيف المنزل',a:[
+['الكنس',30,''],['المسح',22,''],['ترتيب الخزائن',18,''],['غسل الملابس',16,''],['تلميع',14,'']]},
+{c:'المنزل والحياة اليومية',d:'متوسط',q:'اذكر شيئًا يستهلك كهرباء كثيرًا',a:[
+['التكييف',30,'المكيف'],['الغسالة',22,''],['السخان',18,''],['الثلاجة',16,''],['الفرن',14,'']]},
+{c:'المنزل والحياة اليومية',d:'سهل',q:'اذكر مكانًا في المنزل يقضي فيه الناس وقتًا طويلًا',a:[
+['الصالة',30,''],['غرفة النوم',22,''],['المطبخ',18,''],['الحمام',16,''],['الشرفة',14,'']]},
+{c:'المنزل والحياة اليومية',d:'متوسط',q:'اذكر شيئًا يزعج الجيران',a:[
+['الضجيج',30,'الصوت العالي'],['الموسيقى',22,''],['الأتربة',18,''],['رائحة الطبخ',16,''],['الحيوانات',14,'']]},
+{c:'الحيوانات والطبيعة',d:'سهل',q:'اذكر حيوانًا أليفًا',a:[
+['القط',30,''],['الكلب',24,''],['الطائر',18,''],['السمكة',16,''],['الأرنب',12,'']]},
+{c:'الحيوانات والطبيعة',d:'سهل',q:'اذكر حيوانًا يعيش في الصحراء',a:[
+['الجمل',30,''],['الثعلب',22,''],['الضب',18,''],['العقرب',16,''],['الصقر',14,'']]},
+{c:'الحيوانات والطبيعة',d:'متوسط',q:'اذكر ظاهرة طبيعية',a:[
+['المطر',30,''],['الثلج',22,''],['الزلزال',18,''],['العاصفة',16,''],['البرق',14,'']]},
+{c:'الحيوانات والطبيعة',d:'سهل',q:'اذكر نباتًا أو شجرة مشهورة عربيًا',a:[
+['النخلة',30,''],['الزيتون',24,''],['التين',18,''],['الصبار',16,''],['العنب',12,'']]},
+{c:'الحيوانات والطبيعة',d:'متوسط',q:'اذكر شيئًا يسبب تلوث البيئة',a:[
+['النفايات',30,''],['دخان المصانع',22,''],['السيارات',18,''],['البلاستيك',16,''],['المبيدات',14,'']]},
+{c:'الحيوانات والطبيعة',d:'سهل',q:'اذكر حيوانًا تحبه الأطفال عادةً',a:[
+['القط',30,''],['الكلب',22,''],['الأرنب',18,''],['السلحفاة',16,''],['الببغاء',14,'']]},
+{c:'الحيوانات والطبيعة',d:'متوسط',q:'اذكر حيوانًا يخاف منه الناس',a:[
+['الأفعى',30,'الثعبان'],['العقرب',22,''],['الأسد',18,''],['التمساح',16,''],['القرش',14,'']]},
+{c:'العادات اليومية والصحة',d:'سهل',q:'اذكر عادة صحية جيدة',a:[
+['شرب الماء',30,''],['النوم مبكرًا',22,''],['الرياضة',18,''],['الأكل الصحي',16,''],['غسل اليدين',14,'']]},
+{c:'العادات اليومية والصحة',d:'سهل',q:'اذكر سببًا للذهاب إلى الطبيب',a:[
+['الحمى',30,'السخونة'],['ألم البطن',22,''],['الصداع',18,''],['السعال',16,''],['التعب',14,'']]},
+{c:'العادات اليومية والصحة',d:'متوسط',q:'اذكر شيئًا يسبب الإرهاق',a:[
+['قلة النوم',30,''],['الضغط النفسي',22,''],['الجلوس الطويل',18,''],['قلة الحركة',16,''],['العمل المفرط',14,'']]},
+{c:'العادات اليومية والصحة',d:'سهل',q:'اذكر نوع رياضة ينصح بها الأطباء',a:[
+['المشي',30,''],['الجري',22,''],['السباحة',18,''],['الدراجة',16,''],['التمارين',14,'']]},
+{c:'العادات اليومية والصحة',d:'متوسط',q:'اذكر سببًا لتأخر النوم',a:[
+['الهاتف',30,'التلفون'],['المسلسلات',22,''],['القهوة',18,''],['التفكير',16,''],['الأصدقاء',14,'']]},
+{c:'العادات اليومية والصحة',d:'سهل',q:'اذكر أول شيء تفعله عند الصداع',a:[
+['تأخذ مسكن',30,'دواء'],['تشرب ماء',22,''],['تنام',18,''],['تسترخي',16,''],['تزور الطبيب',14,'']]},
+{c:'العادات اليومية والصحة',d:'متوسط',q:'اذكر نصيحة صحية يكررها الأطباء',a:[
+['شرب الماء',30,''],['النوم الكافي',22,''],['الحركة',18,''],['تقليل السكر',16,''],['التوتر',14,'']]},
+{c:'الأعياد والمناسبات',d:'سهل',q:'اذكر شيئًا يفعله الناس في العيد',a:[
+['الصلاة',30,''],['زيارة الأهل',22,''],['العيدية',18,''],['الملابس الجديدة',16,''],['الحلويات',14,'']]},
+{c:'الأعياد والمناسبات',d:'سهل',q:'اذكر هدية تُقدَّم في العيد',a:[
+['المال',30,'العيدية'],['ملابس',22,''],['حلويات',18,''],['ألعاب',16,''],['عطور',14,'']]},
+{c:'الأعياد والمناسبات',d:'متوسط',q:'اذكر مناسبة يحتفل بها العرب',a:[
+['رمضان',30,''],['عيد الفطر',22,''],['عيد الأضحى',18,''],['المولد النبوي',16,''],['رأس السنة',14,'']]},
+{c:'الأعياد والمناسبات',d:'سهل',q:'اذكر طبقًا يُقدَّم في العيد',a:[
+['المعمول',30,''],['الكعك',22,''],['الكنافة',18,''],['المشاوي',16,''],['الحلويات',14,'']]},
+{c:'الأعياد والمناسبات',d:'متوسط',q:'اذكر مكانًا يزوره الناس في العيد',a:[
+['بيت الجدة',30,''],['بيت الأقارب',22,''],['الحديقة',18,''],['المتنزهات',16,''],['المسجد',14,'']]},
+{c:'الأعياد والمناسبات',d:'سهل',q:'اذكر مظهرًا من مظاهر فرحة العيد',a:[
+['الملابس الجديدة',30,''],['التهاني',22,''],['التجمعات',18,''],['الألعاب',16,''],['الحلويات',14,'']]},
+{c:'رمضان والعادات الاجتماعية',d:'سهل',q:'اذكر شيئًا يفعله الناس في رمضان',a:[
+['الصيام',30,''],['الإفطار الجماعي',22,''],['صلاة التراويح',18,''],['قراءة القرآن',16,''],['المسحراتي',14,'']]},
+{c:'رمضان والعادات الاجتماعية',d:'سهل',q:'اذكر طبقًا رمضانيًا مشهورًا',a:[
+['القطايف',28,''],['الكنافة',22,''],['الفول',18,''],['الشوربة',16,''],['السمبوسك',16,'']]},
+{c:'رمضان والعادات الاجتماعية',d:'متوسط',q:'اذكر شيئًا يميز أجواء رمضان',a:[
+['الفوانيس',30,''],['الديكورات',22,''],['المسحراتي',18,''],['التجمعات',16,''],['البرامج',14,'']]},
+{c:'رمضان والعادات الاجتماعية',d:'سهل',q:'اذكر مشروبًا رمضانيًا مشهورًا',a:[
+['قمر الدين',30,''],['التمر هندي',22,''],['العرقسوس',18,''],['الكركديه',16,''],['الليمون',14,'']]},
+{c:'رمضان والعادات الاجتماعية',d:'متوسط',q:'اذكر عادة إفطار جماعي',a:[
+['موائد الرحمن',30,''],['عزائم العائلة',22,''],['تبادل الأطباق',18,''],['الإفطار في المسجد',16,''],['الإفطار في العمل',14,'']]},
+{c:'رمضان والعادات الاجتماعية',d:'سهل',q:'اذكر أول شيء تفعله عند سماع الأذان',a:[
+['أفطر',30,''],['أشرب ماء',22,''],['أتوقف عن الأكل',18,''],['أدعو',16,''],['أذهب للمسجد',14,'']]},
+{c:'رمضان والعادات الاجتماعية',d:'متوسط',q:'اذكر حلوى رمضان المفضلة',a:[
+['قطايف',30,''],['كنافة',22,''],['بسبوسة',18,''],['معمول',16,''],['حلاوة الجبن',14,'']]},
+{c:'الأمثال واللغة العربية',d:'سهل',q:'اذكر مثلًا عربيًا مشهورًا',a:[
+['الصبر مفتاح الفرج',30,''],['العلم نور',22,''],['الوقت كالسيف',18,''],['الطيور على أشكالها',16,''],['لا تؤجل عمل اليوم',14,'']]},
+{c:'الأمثال واللغة العربية',d:'متوسط',q:'اذكر كلمة عربية صعبة النطق',a:[
+['استغفر',28,''],['مستشفى',22,''],['اصطبر',18,''],['مستنصر',16,''],['خنفشار',16,'']]},
+{c:'الأمثال واللغة العربية',d:'سهل',q:'اذكر حرفًا عربيًا صعب الكتابة',a:[
+['ض',30,''],['ظ',24,''],['ذ',18,''],['ص',16,''],['ط',12,'']]},
+{c:'الأمثال واللغة العربية',d:'متوسط',q:'اذكر مصدرًا لتعلّم اللغة العربية',a:[
+['الكتب',30,''],['التطبيقات',22,''],['المدرسة',18,''],['القرآن',16,''],['الشعر',14,'']]},
+{c:'الأمثال واللغة العربية',d:'سهل',q:'اذكر اسمًا لشاعر عربي مشهور',a:[
+['المتنبي',30,''],['أحمد شوقي',22,''],['محمود درويش',18,''],['أبو نواس',16,''],['نزار قباني',14,'']]},
+{c:'الأمثال واللغة العربية',d:'سهل',q:'اذكر مثلًا شعبيًا أردنيًا',a:[
+['الصبر مفتاح الفرج',28,''],['الجار قبل الدار',22,''],['اللي استحوا ماتوا',18,''],['طب الجرة على تمها',16,''],['بضاعة حلب',16,'']]},
+{c:'الأمثال واللغة العربية',d:'متوسط',q:'اذكر تعبيرًا شعبيًا يعني بسرعة',a:[
+['بلمح البصر',30,''],['فورًا',22,''],['بالطاير',18,''],['بسرعة البرق',16,''],['بحَرَكة',14,'']]},
+{c:'الألغاز والتفكير المنطقي',d:'سهل',q:'اذكر شيئًا يساعد على التفكير',a:[
+['الهدوء',30,''],['الورق والقلم',22,''],['النوم الكافي',18,''],['المشي',16,''],['الاستشارة',14,'']]},
+{c:'الألغاز والتفكير المنطقي',d:'متوسط',q:'اذكر مهارة مطلوبة في حل الألغاز',a:[
+['الملاحظة',30,''],['الصبر',22,''],['التحليل',18,''],['الإبداع',16,''],['التركيز',14,'']]},
+{c:'الألغاز والتفكير المنطقي',d:'سهل',q:'اذكر لعبة تنمي العقل',a:[
+['الشطرنج',30,''],['السودوكو',22,''],['الكلمات المتقاطعة',18,''],['الذاكرة',16,''],['الألغاز',14,'']]},
+{c:'الألغاز والتفكير المنطقي',d:'متوسط',q:'اذكر سببًا يجعل الشخص يخطئ في الحساب',a:[
+['التسرع',30,''],['قلة التركيز',22,''],['الضغط',18,''],['الملل',16,''],['الإرهاق',14,'']]},
+{c:'الألغاز والتفكير المنطقي',d:'سهل',q:'اذكر رقمًا يستخدم كثيرًا في الحياة',a:[
+['7',30,''],['5',22,''],['10',18,''],['3',16,''],['100',14,'']]},
+{c:'العلوم والمعرفة العامة',d:'سهل',q:'اذكر كوكبًا من كواكب النظام الشمسي',a:[
+['المريخ',28,''],['المشتري',22,''],['زحل',18,''],['عطارد',16,''],['الزهرة',16,'']]},
+{c:'العلوم والمعرفة العامة',d:'سهل',q:'اذكر وحدة قياس',a:[
+['المتر',30,''],['الكيلو',22,''],['اللتر',18,''],['الساعة',16,''],['الدرجة',14,'']]},
+{c:'العلوم والمعرفة العامة',d:'متوسط',q:'اذكر عالمًا مشهورًا',a:[
+['أينشتاين',30,''],['نيوتن',22,''],['أديسون',18,''],['ابن سينا',16,''],['الخوارزمي',14,'']]},
+{c:'العلوم والمعرفة العامة',d:'سهل',q:'اذكر مصدرًا للطاقة المتجددة',a:[
+['الشمس',30,''],['الرياح',22,''],['الماء',18,''],['الحرارة الجوفية',16,''],['الأمواج',14,'']]},
+{c:'العلوم والمعرفة العامة',d:'متوسط',q:'اذكر عضوًا من جسم الإنسان',a:[
+['القلب',30,''],['الكبد',22,''],['الكلى',18,''],['الرئة',16,''],['الدماغ',14,'']]},
+{c:'التاريخ والجغرافيا',d:'سهل',q:'اذكر نهرًا مشهورًا',a:[
+['النيل',30,''],['الفرات',22,''],['دجلة',18,''],['الأردن',16,''],['الليطاني',14,'']]},
+{c:'التاريخ والجغرافيا',d:'سهل',q:'اذكر حضارة قديمة',a:[
+['المصرية',30,''],['الرومانية',22,''],['البابلية',18,''],['الفينيقية',16,''],['الفرعونية',14,'']]},
+{c:'التاريخ والجغرافيا',d:'متوسط',q:'اذكر قائدًا عربيًا تاريخيًا',a:[
+['صلاح الدين',30,''],['خالد بن الوليد',22,''],['عمر بن الخطاب',18,''],['طارق بن زياد',16,''],['عمرو بن العاص',14,'']]},
+{c:'التاريخ والجغرافيا',d:'سهل',q:'اذكر قارة',a:[
+['آسيا',30,''],['أفريقيا',22,''],['أوروبا',18,''],['أمريكا الشمالية',16,''],['أستراليا',14,'']]},
+{c:'التاريخ والجغرافيا',d:'متوسط',q:'اذكر بحرًا أو محيطًا',a:[
+['البحر المتوسط',30,''],['البحر الأحمر',22,''],['المحيط الأطلسي',18,''],['المحيط الهندي',16,''],['بحر العرب',14,'']]},
+{c:'المواقف الافتراضية',d:'متوسط',q:'لو ربحت مليون دولار، ما أول شيء ستفعله؟',a:[
+['أشتري بيت',30,'منزل'],['أساعد أهلي',22,''],['أسافر',18,''],['أستثمر',16,''],['أتطوع',14,'']]},
+{c:'المواقف الافتراضية',d:'سهل',q:'لو تستطيع الطيران، أين ستذهب؟',a:[
+['جزر المالديف',28,''],['باريس',22,''],['مكة',18,''],['تركيا',16,''],['اليابان',16,'']]},
+{c:'المواقف الافتراضية',d:'متوسط',q:'لو قابلت شخصية تاريخية، من ستختار؟',a:[
+['الرسول ﷺ',30,''],['عمر بن الخطاب',22,''],['صلاح الدين',18,''],['ابن سينا',16,''],['الخوارزمي',14,'']]},
+{c:'المواقف الافتراضية',d:'سهل',q:'لو تأخرت عن العمل، ماذا تقول؟',a:[
+['الزحمة',30,'الازدحام'],['عطل السيارة',22,''],['مشكلة عائلية',18,''],['نمت متأخر',16,''],['الطريق طويل',14,'']]},
+{c:'المواقف الافتراضية',d:'متوسط',q:'لو حصلت على يوم عطلة إضافي، ماذا ستفعل؟',a:[
+['أنام',30,''],['أسافر',22,''],['أزور الأهل',18,''],['مارس هواية',16,''],['أقرأ',14,'']]},
+{c:'الاختيارات الصعبة',d:'متوسط',q:'أيهما تفضل: قهوة أم شاي؟',a:[
+['قهوة',30,''],['شاي',25,''],['الاثنين',20,'كلاهما'],['لا هذا ولا ذاك',15,'لا'],['حسب المزاج',10,'حسب الوقت']]},
+{c:'الاختيارات الصعبة',d:'متوسط',q:'أيهما تختار: صيف أم شتاء؟',a:[
+['شتاء',30,''],['صيف',25,''],['الربيع',20,''],['الخريف',15,''],['لا يهم',10,'']]},
+{c:'الاختيارات الصعبة',d:'متوسط',q:'أيهما تفضل: بحر أم جبل؟',a:[
+['بحر',30,''],['جبل',25,''],['الاثنين',20,''],['صحراء',15,''],['لا يهم',10,'']]},
+{c:'الاختيارات الصعبة',d:'متوسط',q:'أيهما تختار: مدينة أم ريف؟',a:[
+['مدينة',30,''],['ريف',25,''],['ضواحي',20,''],['حسب المزاج',15,''],['لا يهم',10,'']]},
+{c:'الاختيارات الصعبة',d:'متوسط',q:'أيهما تفضل: قراءة كتاب أم مشاهدة فيلم؟',a:[
+['كتاب',30,''],['فيلم',25,''],['الاثنين',20,''],['مسلسل',15,''],['حسب الوقت',10,'']]},
+{c:'العمل الجماعي والتعاون',d:'سهل',q:'اذكر شيئًا يحتاجه الفريق الناجح',a:[
+['التعاون',30,''],['الاحترام',22,''],['التواصل',18,''],['وضوح الأهداف',16,''],['توزيع المهام',14,'']]},
+{c:'العمل الجماعي والتعاون',d:'متوسط',q:'اذكر شيئًا يعطل العمل الجماعي',a:[
+['الأنانية',30,''],['سوء التواصل',22,''],['عدم الالتزام',18,''],['الخلافات',16,''],['الغموض',14,'']]},
+{c:'العمل الجماعي والتعاون',d:'سهل',q:'اذكر صفة قائد ناجح',a:[
+['العدل',30,''],['الاستماع',22,''],['الحسم',18,''],['التحفيز',16,''],['القدوة',14,'']]},
+{c:'العمل الجماعي والتعاون',d:'متوسط',q:'اذكر طريقة لتحفيز الفريق',a:[
+['التقدير',30,''],['المكافآت',22,''],['التدريب',18,''],['الوضوح',16,''],['الاحتفال',14,'']]},
+{c:'العمل الجماعي والتعاون',d:'سهل',q:'اذكر مثالًا على التعاون',a:[
+['مساعدة الجار',30,''],['العمل التطوعي',22,''],['تنظيف الحي',18,''],['المساعدة في الأزمات',16,''],['التبرع',14,'']]},
+{c:'الحياة اليومية',d:'سهل',q:'اذكر شيئًا يفعله الأردنيون بعد صلاة الجمعة',a:[
+['أكل المنسف',30,''],['زيارة الأهل',22,''],['القيلولة',18,''],['القهوة',16,''],['الخروج للحديقة',14,'']]},
+{c:'الحياة اليومية',d:'سهل',q:'اذكر شيئًا يفعله الناس عند أول مطر في الشتاء',a:[
+['يفرحون',30,''],['يشربون السحلب',22,''],['الكشتة',18,''],['التصوير',16,''],['فتح النوافذ',14,'']]},
+{c:'التعليم',d:'سهل',q:'اذكر شيئًا يفعله الطالب في التوجيهي',a:[
+['الدراسة',30,''],['السهر',22,''],['القلق',18,''],['الدروس الخصوصية',16,''],['الدعاء',14,'']]},
+{c:'التعليم',d:'متوسط',q:'اذكر مادة يخافها طلاب التوجيهي',a:[
+['الرياضيات',30,''],['الفيزياء',22,''],['الكيمياء',18,''],['اللغة الإنجليزية',16,''],['الأحياء',14,'']]},
+{c:'العائلة والأقارب',d:'سهل',q:'اذكر شيئًا يفعله الأردنيون ليلة العيد',a:[
+['الحناء',30,''],['تجهيز الملابس',22,''],['زيارة الأهل',18,''],['طبخ المعمول',16,''],['تنظيف البيت',14,'']]},
+{c:'العائلة والأقارب',d:'سهل',q:'اذكر شيئًا يجتمع عليه الأردنيون',a:[
+['المنسف',30,''],['القهوة',22,''],['الديوانية',18,''],['الأعراس',16,''],['العزائم',14,'']]}
+];
+
+/* ============================================================
+   تهيئة بنك الأسئلة
+============================================================ */
+const QUESTIONS_KEY = 'tahaddi_questions_v4';
+let QUESTIONS = [];
+
+function deepCopyBuiltIn(){
+  return BUILT_IN_QUESTIONS.map(q => ({
+    c: q.c, d: q.d, q: q.q,
+    a: q.a.map(a => [a[0], a[1], a[2] || ''])
+  }));
+}
+
+/* ============================================================
+   نظام مطابقة الإجابات — إعدادات مركزية
+============================================================ */
+const MATCH_CONFIG = {
+  stripLeadingAL: true,
+  allowTokenReorder: true,
+  minFuzzyTokenLength: 4,
+  maxEditDistanceRatio: 0.18,
+  minWordOverlapForMulti: 0.85,
+  allowSingleWordInPhrase: false
+};
+
+/* ============================================================
+   مرادفات أردنية/شامية/خليجية (تُقارن بعد normalize)
+============================================================ */
+const ANSWER_SYNONYMS = {
+  'هاتف':['تلفون','جوال','موبايل','موبيل','خلوي'],
+  'حاسوب':['كمبيوتر','لابتوب','حاسب','لاب توب'],
+  'شاحن':['تشارجر','شاحن'],
+  'مال':['فلوس','مصاري','نقود','كاش'],
+  'سيارة':['مركبة','عربية','موتر','اوتومبيل'],
+  'حافلة':['باص','حافلة','باصات'],
+  'دراجة':['بسكليت','سيكل'],
+  'منزل':['بيت','دار'],
+  'حمام':['تواليت','دورة مياه','دورة مية'],
+  'طعام':['اكل','وجبة','غذاء'],
+  'خبز':['عيش'],
+  'ماء':['مي','موية','مياه'],
+  'قهوة':['بن'],
+  'شاي':['چاي'],
+  'لبن':['زبادي','روب'],
+  'أم':['الوالدة','ماما','امي','يمه'],
+  'أب':['الوالد','بابا','ابوي','يبه'],
+  'صديق':['رفيق','صاحب','خوي'],
+  'أصدقاء':['صحاب','رفاق','شلة','خويان'],
+  'مدرس':['أستاذ','معلم'],
+  'طالب':['تلميذ'],
+  'نعم':['ايوه','اجل','يب'],
+  'لا':['كلا','مش'],
+  'كثير':['كتير'],
+  'قليل':['شوي'],
+  'جيد':['منيح','زين','حلو','تمام'],
+  'سعيد':['فرحان','مبسوط'],
+  'حزين':['زعلان','مكدر'],
+  'غاضب':['معصب','زعلان'],
+  'خائف':['خايف','مرعوب'],
+  'مطر':['شتا'],
+  'حار':['حر','سخون'],
+  'بارد':['برد'],
+  'يعمل':['يشتغل','بشتغل'],
+  'يذهب':['يروح'],
+  'يأكل':['ياكل','بوكل'],
+  'يشرب':['بشرب'],
+  'ينام':['بنام'],
+  'عطلة':['اجازة'],
+  'هدية':['هديه']
+};
+
+const SYNONYM_TO_CANONICAL = (() => {
+  const out = new Map();
+  for (const [canonical, variants] of Object.entries(ANSWER_SYNONYMS)) {
+    const normCanonical = normalize(canonical);
+    out.set(normCanonical, normCanonical);
+    for (const v of variants) out.set(normalize(v), normCanonical);
+  }
+  return out;
+})();
+
+function normalize(s){
+  if (!s) return '';
+  return String(s).toLowerCase().trim()
+    .replace(/[\u064B-\u065F\u0670\u0640]/g,'')
+    .replace(/[أإآٱ]/g,'ا').replace(/ى/g,'ي').replace(/ؤ/g,'و').replace(/ئ/g,'ي')
+    .replace(/ة/g,'ه')
+    .replace(/[ـًٌٍَُِّْٰ]/g,'')
+    .replace(/[^\p{L}\p{N}\s]/gu,' ')
+    .replace(/\s+/g,' ').trim();
+}
+
+function normalizeToken(w){
+  if (!w) return '';
+  if (MATCH_CONFIG.stripLeadingAL && w.length > 3 && w.startsWith('ال')) w = w.slice(2);
+  return w;
+}
+
+function tokenize(s){
+  return normalize(s).split(' ').map(normalizeToken).filter(Boolean);
+}
+
+function expandSynonyms(tokens){
+  return tokens.map(t => SYNONYM_TO_CANONICAL.get(t) || t);
+}
+
+function editDistance(a,b){
+  if (a === b) return 0;
+  if (!a) return b.length;
+  if (!b) return a.length;
+  let prev = Array.from({length:b.length+1},(_,i)=>i);
+  for(let i=1;i<=a.length;i++){
+    const cur=[i];
+    for(let j=1;j<=b.length;j++) cur[j]=Math.min(cur[j-1]+1,prev[j]+1,prev[j-1]+(a[i-1]===b[j-1]?0:1));
+    prev=cur;
+  }
+  return prev[b.length];
+}
+
+function tokensEqual(a, b){
+  if (a === b) return true;
+  if (a.length < MATCH_CONFIG.minFuzzyTokenLength) return false;
+  if (b.length < MATCH_CONFIG.minFuzzyTokenLength) return false;
+  const maxD = Math.max(1, Math.floor(Math.min(a.length, b.length) * MATCH_CONFIG.maxEditDistanceRatio));
+  return editDistance(a, b) <= maxD;
+}
+
+function tokensSetEqual(a, b){
+  if (a.length !== b.length) return false;
+  const used = new Array(b.length).fill(false);
+  for (const token of a) {
+    let found = false;
+    for (let i = 0; i < b.length; i++) {
+      if (!used[i] && tokensEqual(token, b[i])) { used[i] = true; found = true; break; }
+    }
+    if (!found) return false;
+  }
+  return true;
+}
+
+function smartMatch(input, candidate){
+  const a = expandSynonyms(tokenize(input));
+  const b = expandSynonyms(tokenize(candidate));
+  if (!a.length || !b.length) return false;
+
+  if (a.length === b.length && tokensSetEqual(a, b)) return true;
+
+  if (MATCH_CONFIG.allowTokenReorder && a.length >= 2 && b.length >= 2) {
+    const aSet = new Set(a);
+    const bSet = new Set(b);
+    let overlap = 0;
+    for (const t of aSet) if (bSet.has(t)) overlap++;
+    const ratio = overlap / Math.max(aSet.size, bSet.size);
+    if (ratio >= MATCH_CONFIG.minWordOverlapForMulti) return true;
+  }
+
+  if (MATCH_CONFIG.allowSingleWordInPhrase) {
+    if (a.length === 1 && b.length > 1 && b.includes(a[0])) return true;
+    if (b.length === 1 && a.length > 1 && a.includes(b[0])) return true;
+  }
+
+  return false;
+}
+
+function canonicalAnswer(s){
+  return expandSynonyms(tokenize(s)).join(' ');
+}
+
+function matchAnswer(q, input, revealedSet){
+  if (!q || !Array.isArray(q.a)) return {index:null, dup:false};
+  const n = normalize(input);
+  if (!n) return {index:null, dup:false};
+
+  const canonicalInput = canonicalAnswer(input);
+  let best = { index: null, dup: false };
+
+  for (let i = 0; i < q.a.length; i++) {
+    const [text, , aliases] = q.a[i];
+    const pool = [text, ...(aliases ? String(aliases).split(/[,،;؛]/) : [])];
+
+    for (const v of pool) {
+      if (canonicalAnswer(v) === canonicalInput) {
+        return { index: i, dup: revealedSet.has(i) };
+      }
+    }
+    if (best.index === null) {
+      for (const v of pool) {
+        if (smartMatch(input, v)) {
+          best = { index: i, dup: revealedSet.has(i) };
+          break;
+        }
+      }
+    }
+  }
+
+  return best;
+}
+
+/* ============================================================
+   أدوات عامة
+============================================================ */
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+function escapeHtml(value){ return String(value ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch])); }
+
+function showScreen(id){
+  $$('.screen').forEach(s => s.classList.remove('active'));
+  const el = document.getElementById(id);
+  if (el) el.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function toast(msg, type='info'){
+  const t = $('#toast');
+  t.className = 'show ' + type;
+  t.textContent = msg;
+  clearTimeout(toast._t);
+  toast._t = setTimeout(() => t.className = '', 2400);
+}
+
+/* ============================================================
+   الأصوات
+============================================================ */
+let audioCtx = null;
+function ensureAudio(){
+  try {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    return true;
+  } catch { return false; }
+}
+function playSound(kind){
+  if (!state || !state.settings.soundOn) return;
+  if (!ensureAudio()) return;
+  const now = audioCtx.currentTime;
+  const beep = (freq, dur, type='sine', delay=0, gainMult=1) => {
+    const o = audioCtx.createOscillator();
+    const gg = audioCtx.createGain();
+    gg.gain.value = 0.15 * (state.settings.volume ?? 0.5) * gainMult;
+    o.type = type;
+    o.frequency.value = freq;
+    o.connect(gg); gg.connect(audioCtx.destination);
+    o.start(now + delay);
+    o.stop(now + delay + dur);
+  };
+  if (kind==='ok'){ beep(880,.12); beep(1320,.18,'sine',.12); }
+  else if (kind==='bad'){ beep(200,.25,'sawtooth'); beep(140,.25,'sawtooth',.12); }
+  else if (kind==='reveal'){ beep(660,.1); beep(990,.12,'sine',.1); }
+  else if (kind==='start'){ beep(440,.1); beep(660,.1,'sine',.1); beep(880,.16,'sine',.2); }
+  else if (kind==='win'){ [523,659,784,1047].forEach((f,i)=>beep(f,.22,'triangle',i*.14,1.2)); }
+  else if (kind==='steal'){ beep(300,.2,'square'); beep(500,.3,'square',.2); }
+  else if (kind==='end'){ [784,659,523,392].forEach((f,i)=>beep(f,.25,'triangle',i*.16)); }
+}
+
+/* ============================================================
+   حالة اللعبة
+============================================================ */
+let state = null;
+
+function defaultSettings(){
+  return {
+    t1Name:'الفريق الأزرق', t2Name:'الفريق الذهبي',
+    t1Color:'#4fd1ff', t2Color:'#f6c453',
+    rounds:5, strikes:3, multiplier:1,
+    category:'الكل', difficulty:'الكل',
+    timerOn:false, timerSec:60, soundOn:true, volume:0.5, stealOn:true
+  };
+}
+
+function freshState(){
+  return {
+    settings: defaultSettings(),
+    teams: [ {name:'الفريق الأزرق', color:'#4fd1ff', score:0},
+             {name:'الفريق الذهبي', color:'#f6c453', score:0} ],
+    currentQ: null,
+    revealed: [],
+    strikes: 0,
+    roundPoints: 0,
+    roundNum: 0,
+    turn: 0,
+    phase: 'idle',
+    roundResolved: false,
+    stealAttempted: false,
+    usedIds: [],
+    history: [],
+    lastAward: null,
+    timer: { remaining: 0, active: false, intervalId: null }
+  };
+}
+
+/* ============================================================
+   تخزين
+============================================================ */
+const LS_KEY = 'tahaddi_al_ayla_v4';
+const FM_KEY = 'tahaddi_fm_v2';
+
+function saveState(){
+  if (!state) return;
+  try {
+    const toSave = Object.assign({}, state, {
+      history: [],
+      timer: { remaining: state.timer.remaining, active: state.timer.active }
+    });
+    localStorage.setItem(LS_KEY, JSON.stringify(toSave));
+  } catch(e){}
+}
+
+function loadState(){
+  try {
+    const raw = localStorage.getItem(LS_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (!parsed || !parsed.teams || !parsed.settings) return null;
+    parsed.settings = { ...defaultSettings(), ...parsed.settings };
+    if (!parsed.timer) parsed.timer = { remaining: parsed.settings.timerSec || 60, active: false };
+    parsed.timer.intervalId = null;
+    parsed.history = [];
+    if (typeof parsed.roundResolved !== 'boolean') parsed.roundResolved = (parsed.phase === 'roundEnd' || parsed.phase === 'gameEnd');
+    return parsed;
+  } catch { return null; }
+}
+
+function saveFM(){
+  if (!fm) return;
+  try {
+    localStorage.setItem(FM_KEY, JSON.stringify({
+      questions: fm.questions, player: fm.player,
+      answers1: fm.answers1, answers2: fm.answers2,
+      idx: fm.idx, remaining: fm.remaining, phase: fm.phase
+    }));
+  } catch(e){}
+}
+function loadFM(){
+  try {
+    const raw = localStorage.getItem(FM_KEY);
+    if (!raw) return null;
+    const p = JSON.parse(raw);
+    if (!p || !Array.isArray(p.questions) || p.questions.length < 5) return null;
+    return { ...p, timerId: null };
+  } catch { return null; }
+}
+function clearFM(){ try { localStorage.removeItem(FM_KEY); } catch(e){} }
+
+/* ============================================================
+   Bank persistence
+============================================================ */
+function sanitizeQuestion(item){
+  if (!item || typeof item !== 'object') return null;
+  const text = String(item.q || '').trim().slice(0, 500);
+  const cat = String(item.c || '').trim().slice(0, 100);
+  const diff = ['سهل','متوسط','صعب'].includes(item.d) ? item.d : 'متوسط';
+  if (!text || !cat) return null;
+  if (!Array.isArray(item.a) || item.a.length < 5 || item.a.length > 8) return null;
+  const answers = [];
+  for (const a of item.a){
+    if (!Array.isArray(a) || a.length < 2) return null;
+    const at = String(a[0] || '').trim().slice(0, 200);
+    const pts = Number(a[1]);
+    const aliases = a[2] ? String(a[2]).trim().slice(0, 500) : '';
+    if (!at || !Number.isFinite(pts) || pts < 0 || pts > 100) return null;
+    answers.push([at, pts, aliases]);
+  }
+  const keys = answers.map(a => normalize(a[0]));
+  if (new Set(keys).size !== keys.length) return null;
+  const total = answers.reduce((s,a) => s + a[1], 0);
+  if (total !== 100) return null;
+  return { c: cat, d: diff, q: text, a: answers };
+}
+
+function sanitizeBank(list){
+  if (!Array.isArray(list)) return [];
+  const seen = new Set();
+  const out = [];
+  for (const item of list){
+    const q = sanitizeQuestion(item);
+    if (!q) continue;
+    const key = normalize(q.q);
+    if (seen.has(key)) continue;
+    seen.add(key);
+    out.push(q);
+  }
+  return out;
+}
+
+function loadQuestions(){
+  try {
+    const raw = localStorage.getItem(QUESTIONS_KEY);
+    if (raw){
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed) && parsed.length > 0){
+        const safe = sanitizeBank(parsed);
+        if (safe.length > 0) return safe;
+      }
+    }
+  } catch(e){}
+  return deepCopyBuiltIn();
+}
+
+function saveQuestions(){
+  try { localStorage.setItem(QUESTIONS_KEY, JSON.stringify(QUESTIONS)); }
+  catch(e){ toast('تعذر حفظ بنك الأسئلة محليًا', 'err'); }
+}
+
+function restoreOriginalBank(){
+  if (!confirm('سيتم استبدال البنك الحالي بالبنك الأصلي وحذف كل التعديلات. متابعة؟')) return;
+  QUESTIONS = deepCopyBuiltIn();
+  try { localStorage.removeItem(QUESTIONS_KEY); } catch(e){}
+  saveQuestions();
+  renderBank();
+  updateHomeCount();
+  toast('تمت استعادة البنك الأصلي', 'ok');
+}
+
+/* ============================================================
+   Setup / Start
+============================================================ */
+function updateHomeCount(){
+  const el = $('#home-qcount');
+  if (el) el.textContent = QUESTIONS.length;
+}
+
+function goSetup(){
+  showScreen('screen-setup');
+  const s = state ? state.settings : defaultSettings();
+  $('#set-t1').value = s.t1Name;
+  $('#set-t2').value = s.t2Name;
+  $('#set-c1').value = s.t1Color;
+  $('#set-c2').value = s.t2Color;
+  $('#set-rounds').value = s.rounds;
+  $('#set-strikes').value = s.strikes;
+  $('#set-mult').value = s.multiplier;
+  $('#set-timer').value = s.timerSec;
+  $('#set-vol').value = Math.round((s.volume ?? 0.5) * 100);
+  $('#set-timeron').checked = s.timerOn;
+  $('#set-sound').checked = s.soundOn;
+  $('#set-steal').checked = s.stealOn;
+  const catSel = $('#set-cat');
+  const cats = ['الكل'].concat(Array.from(new Set(QUESTIONS.map(q=>q.c))));
+  catSel.innerHTML = cats.map(c=>`<option>${escapeHtml(c)}</option>`).join('');
+  catSel.value = cats.includes(s.category) ? s.category : 'الكل';
+  $('#set-diff').value = s.difficulty;
+}
+
+function startGame(){
+  const settings = {
+    t1Name: $('#set-t1').value.trim() || 'الفريق 1',
+    t2Name: $('#set-t2').value.trim() || 'الفريق 2',
+    t1Color: $('#set-c1').value,
+    t2Color: $('#set-c2').value,
+    rounds: Math.max(1, parseInt($('#set-rounds').value,10)||5),
+    strikes: Math.max(1, parseInt($('#set-strikes').value,10)||3),
+    multiplier: Math.max(1, parseInt($('#set-mult').value,10)||1),
+    category: $('#set-cat').value,
+    difficulty: $('#set-diff').value,
+    timerOn: $('#set-timeron').checked,
+    timerSec: Math.max(10, parseInt($('#set-timer').value,10)||60),
+    soundOn: $('#set-sound').checked,
+    volume: Math.max(0, Math.min(1, (parseInt($('#set-vol').value,10)||50) / 100)),
+    stealOn: $('#set-steal').checked
+  };
+  state = freshState();
+  state.settings = settings;
+  state.teams = [
+    {name:settings.t1Name, color:settings.t1Color, score:0},
+    {name:settings.t2Name, color:settings.t2Color, score:0}
+  ];
+  showScreen('screen-game');
+  renderGame();
+  nextRound();
+}
+
+/* ============================================================
+   Question selection + exhaustion
+============================================================ */
+function pickQuestion(){
+  const s = state.settings;
+  const pool = QUESTIONS.filter(q =>
+    !state.usedIds.includes(q.q) &&
+    (s.category === 'الكل' || q.c === s.category) &&
+    (s.difficulty === 'الكل' || q.d === s.difficulty)
+  );
+  if (!pool.length) return null;
+  return pool[Math.floor(Math.random()*pool.length)];
+}
+function pickFallbackQuestion(){
+  return QUESTIONS.find(q => !state.usedIds.includes(q.q)) || null;
+}
+function handleExhausted(){
+  const any = pickFallbackQuestion();
+  if (!any){
+    alert('نفدت جميع الأسئلة من البنك. سيتم إعلان النتيجة الحالية.');
+    endGame();
+    return;
+  }
+  if (confirm('لا توجد أسئلة متبقية في الفئة/الصعوبة المختارة. هل تريد استخدام سؤال من فئة أخرى؟')){
+    startRoundWith(any);
+    return;
+  }
+  if (confirm('هل تريد إعلان النتيجة الحالية بدلًا من المتابعة؟')){
+    endGame();
+  }
+}
+
+/* ============================================================
+   إدارة الجولات
+============================================================ */
+function nextRound(){
+  if (!state) return;
+  if (state.phase === 'steal'){
+    toast('يجب حسم فرصة السرقة أولًا (نجاح أو فشل)', 'err');
+    return;
+  }
+  if (state.phase === 'playing'){
+    if (!confirm('الجولة الحالية لم تُحسم. هل تريد تجاوزها دون احتساب نقاطها؟')) return;
+  }
+  if (state.phase === 'gameEnd'){ toast('اللعبة منتهية', 'info'); return; }
+
+  const s = state.settings;
+  if (state.roundNum >= s.rounds){ endGame(); return; }
+
+  const q = pickQuestion();
+  if (!q){ handleExhausted(); return; }
+
+  startRoundWith(q);
+}
+
+function startRoundWith(q){
+  pushHistory();
+  state.currentQ = q;
+  state.revealed = [];
+  state.strikes = 0;
+  state.roundPoints = 0;
+  state.roundNum += 1;
+  state.phase = 'playing';
+  state.roundResolved = false;
+  state.stealAttempted = false;
+  state.lastAward = null;
+  state.usedIds.push(q.q);
+  state.timer.remaining = state.settings.timerSec;
+  state.timer.active = false;
+  const sr = document.getElementById('steal-result');
+  if (sr) sr.style.display = 'none';
+  if (state.settings.timerOn) startTimer();
+  renderGame();
+  saveState();
+}
+
+function resolveRound(teamIdx, reason){
+  if (!state) return;
+  if (state.roundResolved){
+    toast('نقاط الجولة محسوبة بالفعل', 'info');
+    return;
+  }
+  state.roundResolved = true;
+  if (state.currentQ && Array.isArray(state.currentQ.a)) {
+    state.revealed = state.currentQ.a.map((_, i) => i);
+  }
+  stopTimer();
+  const mult = Math.max(1, state.settings.multiplier | 0);
+  const pts = (state.roundPoints || 0) * mult;
+  if (pts > 0){
+    state.teams[teamIdx].score += pts;
+  }
+  state.phase = 'roundEnd';
+  state.lastAward = { team: teamIdx, points: pts, reason: reason || '' };
+  toast(`تم منح ${pts} نقطة إلى ${state.teams[teamIdx].name}`, 'ok');
+
+  const sr = document.getElementById('steal-result');
+  if (sr && (reason === 'steal-success' || reason === 'steal-fail')) {
+    const won = reason === 'steal-success';
+    sr.className = 'steal-result ' + (won ? 'win' : 'lose');
+    sr.textContent = won
+      ? `✅ نجحت السرقة! ${state.teams[teamIdx].name} حصل على ${pts} نقطة`
+      : `❌ فشلت السرقة! ${state.teams[teamIdx].name} يحتفظ بـ ${pts} نقطة`;
+    sr.style.display = 'block';
+  }
+
+  renderGame();
+  saveState();
+}
+
+/* ============================================================
+   Timer
+============================================================ */
+function startTimer(){
+  stopTimer();
+  if (!state || !state.settings.timerOn) return;
+  if (state.timer.remaining <= 0) return;
+  state.timer.active = true;
+  state.timer.intervalId = setInterval(() => {
+    state.timer.remaining -= 1;
+    if (state.timer.remaining % 5 === 0 || state.timer.remaining <= 0) saveState();
+    if (state.timer.remaining <= 0){
+      stopTimer();
+      onTimerExpired();
+    } else {
+      const el = $('#g-timer');
+      if (el) el.textContent = '⏱ ' + state.timer.remaining + 'ث';
+    }
+  }, 1000);
+}
+function stopTimer(){
+  if (!state || !state.timer) return;
+  if (state.timer.intervalId){
+    clearInterval(state.timer.intervalId);
+    state.timer.intervalId = null;
+  }
+  state.timer.active = false;
+}
+function onTimerExpired(){
+  if (!state) return;
+  if (state.phase !== 'playing') return;
+  toast('انتهى الوقت!', 'info');
+  resolveRound(state.turn, 'timeout');
+}
+
+/* ============================================================
+   Input / Match
+============================================================ */
+function submitAnswer(){
+  if (!state || !state.currentQ) return;
+  if (state.phase !== 'playing' && state.phase !== 'steal'){
+    toast('لا يمكن الإجابة الآن.', 'err');
+    return;
+  }
+  const input = $('#g-input').value.trim();
+  if (!input){ toast('اكتب إجابة أولًا', 'err'); return; }
+  const revealedSet = new Set(state.revealed);
+  const m = matchAnswer(state.currentQ, input, revealedSet);
+
+  if (m.dup){ toast('هذه الإجابة مكشوفة بالفعل!', 'info'); $('#g-input').value=''; return; }
+
+  if (state.phase === 'steal'){
+    if (m.index !== null) stealSuccess();
+    else stealFail();
+    $('#g-input').value = '';
+    return;
+  }
+
+  if (m.index === null){
+    wrongAnswer();
+    const el = $('#g-answers');
+    if (el){ el.classList.add('shake'); setTimeout(()=>el.classList.remove('shake'), 500); }
+  } else {
+    revealAnswer(m.index);
+  }
+  $('#g-input').value = '';
+}
+
+function revealAnswer(idx){
+  if (!state || !state.currentQ) return;
+  if (state.phase !== 'playing') return;
+  if (state.revealed.includes(idx)) return;
+  pushHistory();
+  state.revealed.push(idx);
+  state.roundPoints += state.currentQ.a[idx][1];
+  playSound('reveal');
+  renderGame();
+  saveState();
+  if (state.revealed.length === state.currentQ.a.length){
+    resolveRound(state.turn, 'all-revealed');
+  }
+}
+function manualRevealNext(){
+  if (!state || !state.currentQ) return;
+  if (state.phase !== 'playing'){ toast('غير متاح الآن', 'err'); return; }
+  const remaining = state.currentQ.a.map((_,i)=>i).filter(i => !state.revealed.includes(i));
+  if (!remaining.length){ toast('كل الإجابات مكشوفة', 'info'); return; }
+  revealAnswer(remaining[0]);
+}
+function wrongAnswer(){
+  if (!state) return;
+  if (state.phase !== 'playing') return;
+  pushHistory();
+  state.strikes += 1;
+  playSound('bad');
+  renderGame();
+  saveState();
+  if (state.strikes >= state.settings.strikes){
+    if (state.settings.stealOn && !state.stealAttempted){
+      state.phase = 'steal';
+      state.stealAttempted = true;
+      stopTimer();
+      playSound('steal');
+      toast('ثلاثة أخطاء! فرصة السرقة للفريق المنافس', 'info');
+      renderGame();
+      saveState();
+    } else {
+      resolveRound(state.turn, 'strikes');
+    }
+  }
+}
+function stealSuccess(){
+  if (!state) return;
+  if (state.phase !== 'steal'){ toast('لا توجد فرصة سرقة حاليًا', 'err'); return; }
+  pushHistory();
+  const opponent = state.turn === 0 ? 1 : 0;
+  resolveRound(opponent, 'steal-success');
+  playSound('win');
+}
+function stealFail(){
+  if (!state) return;
+  if (state.phase !== 'steal'){ toast('لا توجد فرصة سرقة حاليًا', 'err'); return; }
+  pushHistory();
+  resolveRound(state.turn, 'steal-fail');
+}
+function finishRound(){
+  if (!state) return;
+  if (!state.currentQ){ toast('لا يوجد سؤال حالي', 'err'); return; }
+  if (state.phase === 'steal'){
+    toast('يجب حسم فرصة السرقة أولًا (نجاح أو فشل)', 'err');
+    return;
+  }
+  if (state.phase === 'roundEnd' || state.phase === 'gameEnd'){
+    toast('الجولة منتهية بالفعل', 'info');
+    return;
+  }
+  if (state.phase !== 'playing'){ return; }
+  if (!confirm('كشف جميع الإجابات وإنهاء الجولة؟ سيتم احتساب نقاط الجولة للفريق صاحب الدور.')) return;
+  pushHistory();
+  state.currentQ.a.forEach((_,i) => {
+    if (!state.revealed.includes(i)) state.revealed.push(i);
+  });
+  resolveRound(state.turn, 'manual-finish');
+}
+function switchTurn(){
+  if (!state) return;
+  if (state.phase === 'steal'){
+    toast('لا يمكن تبديل الدور أثناء فرصة السرقة؛ حسمها أولًا', 'err');
+    return;
+  }
+  if (state.phase === 'roundEnd' || state.phase === 'gameEnd'){
+    toast('الجولة منتهية؛ لا يمكن تبديل الدور الآن', 'info');
+    return;
+  }
+  state.turn = state.turn === 0 ? 1 : 0;
+  renderGame();
+  saveState();
+}
+function adjustScore(teamIdx, delta){
+  if (!state) return;
+  pushHistory();
+  state.teams[teamIdx].score = Math.max(0, state.teams[teamIdx].score + delta);
+  renderGame();
+  saveState();
+}
+
+/* ============================================================
+   Undo
+============================================================ */
+function pushHistory(){
+  if (!state) return;
+  const snap = JSON.parse(JSON.stringify(state));
+  snap.history = [];
+  snap.timer.intervalId = null;
+  state.history.push(snap);
+  if (state.history.length > 30) state.history.shift();
+}
+function undoLast(){
+  if (!state || !state.history.length){ toast('لا يوجد تراجع متاح', 'info'); return; }
+  stopTimer();
+  const prev = state.history.pop();
+  const remaining = state.history.slice();
+  state = prev;
+  state.history = remaining;
+  state.timer = state.timer || { remaining: state.settings.timerSec, active:false };
+  state.timer.intervalId = null;
+  if (state.phase === 'playing' && state.settings.timerOn && state.timer.remaining > 0){
+    startTimer();
+  }
+  toast('تم التراجع', 'info');
+  renderGame();
+  saveState();
+}
+
+/* ============================================================
+   Render
+============================================================ */
+function renderGame(){
+  if (!state) return;
+  const s = state.settings;
+  $('#g-round').textContent = `الجولة ${state.roundNum} / ${s.rounds}`;
+  $('#g-cat').textContent = state.currentQ ? state.currentQ.c : '—';
+  $('#g-diff').textContent = state.currentQ ? state.currentQ.d : '—';
+
+  const panel = $('#g-panel');
+  if (panel) panel.classList.toggle('steal', state.phase === 'steal');
+  const stealTag = $('#g-steal-tag');
+  if (stealTag) stealTag.style.display = state.phase === 'steal' ? 'inline-block' : 'none';
+
+  let titleText;
+  if (!state.currentQ) titleText = 'اختر سؤالًا للبدء';
+  else if (state.phase === 'roundEnd') titleText = 'انتهت الجولة — بانتظار «السؤال التالي»';
+  else titleText = state.currentQ.q;
+  $('#g-question').textContent = titleText;
+  $('#g-pot').textContent = (state.roundPoints * Math.max(1, s.multiplier | 0));
+
+  const teamsEl = $('#g-teams');
+  teamsEl.innerHTML = state.teams.map((t, i) => `
+    <div class="team-card ${state.turn===i && state.phase!=='gameEnd' ? 'turn' : ''}">
+      <h3 style="color:${t.color}">${escapeHtml(t.name)}</h3>
+      <div class="score" style="color:${t.color}">${t.score}</div>
+      ${state.turn===i && state.phase!=='gameEnd' ? '<div class="role">صاحب الدور</div>' : ''}
+    </div>
+  `).join('');
+
+  const strikesEl = $('#g-strikes');
+  strikesEl.innerHTML = '';
+  for (let i=0;i<s.strikes;i++){
+    const x = document.createElement('span');
+    x.className = 'strike-x' + (i<state.strikes?' on':'');
+    x.textContent = '✕';
+    strikesEl.appendChild(x);
+  }
+
+  const ansEl = $('#g-answers');
+  ansEl.innerHTML = '';
+  if (state.currentQ){
+    state.currentQ.a.forEach((ans, i) => {
+      const revealed = state.revealed.includes(i);
+      const row = document.createElement('div');
+      row.className = 'ans-row' + (revealed?' revealed':'');
+      row.innerHTML = `
+        <span style="display:flex;align-items:center;gap:12px">
+          <span class="num">${i+1}</span>
+          <span>${revealed ? escapeHtml(ans[0]) : '؟؟؟'}</span>
+        </span>
+        <span class="pts">${revealed ? ans[1] : ''}</span>
+      `;
+      ansEl.appendChild(row);
+    });
+  }
+
+  const canAnswer = state.phase === 'playing' || state.phase === 'steal';
+  const inputEl = $('#g-input');
+  const submitBtn = $('#g-submit');
+  if (inputEl){
+    inputEl.disabled = !canAnswer;
+    inputEl.placeholder = canAnswer ? 'اكتب إجابة الفريق هنا...' : 'غير متاح الآن';
+  }
+  if (submitBtn) submitBtn.disabled = !canAnswer;
+
+  const timerEl = $('#g-timer');
+  if (s.timerOn && state.timer.active && state.phase === 'playing'){
+    timerEl.textContent = '⏱ ' + state.timer.remaining + 'ث';
+  } else {
+    timerEl.textContent = '';
+  }
+}
+
+/* ============================================================
+   End game / exit
+============================================================ */
+function endGame(){
+  if (!state) return;
+  stopTimer();
+  state.phase = 'gameEnd';
+  state.roundResolved = true;
+  const [a,b] = state.teams;
+  let title;
+  if (a.score === b.score) title = 'تعادل الفريقان!';
+  else title = `🏆 الفائز: ${a.score > b.score ? a.name : b.name}`;
+  $('#res-title').textContent = title;
+  $('#res-scores').innerHTML = state.teams.map(t => `
+    <div class="sc">
+      <div style="color:${t.color};font-weight:900">${escapeHtml(t.name)}</div>
+      <b style="color:${t.color}">${t.score}</b>
+    </div>
+  `).join('');
+  playSound('end');
+  showScreen('screen-results');
+  saveState();
+}
+
+function exitToMenu(){
+  stopTimer();
+  saveState();
+  showScreen('screen-home');
+  updateHomeCount();
+}
+
+function continueGame(){
+  const saved = loadState();
+  if (!saved){ toast('لا توجد لعبة محفوظة', 'info'); return; }
+  if (!saved.currentQ || saved.phase === 'gameEnd'){
+    toast('اللعبة المحفوظة منتهية أو لا يوجد سؤال حالي', 'info');
+    return;
+  }
+  state = saved;
+  state.timer = state.timer || { remaining: state.settings.timerSec, active:false };
+  state.timer.intervalId = null;
+  showScreen('screen-game');
+  renderGame();
+  if (state.phase === 'playing' && state.settings.timerOn && state.timer.remaining > 0){
+    startTimer();
+  }
+  toast('تم استئناف اللعبة', 'ok');
+}
+
+function resetSavedGame(){
+  if (!confirm('سيتم حذف اللعبة المحفوظة وجولة النقاط السريعة (وليس بنك الأسئلة). متابعة؟')) return;
+  try { localStorage.removeItem(LS_KEY); } catch(e){}
+  clearFM();
+  toast('تم حذف الحفظ', 'ok');
+}
+
+/* ============================================================
+   Bank UI
+============================================================ */
+let editingIndex = -1;
+
+function renderBank(){
+  const search = ($('#bank-search')?.value || '').trim();
+  const cat = $('#bank-cat')?.value || 'الكل';
+  const diff = $('#bank-diff')?.value || 'الكل';
+  const cats = ['الكل'].concat(Array.from(new Set(QUESTIONS.map(q=>q.c))));
+  const catSel = $('#bank-cat');
+  if (catSel && catSel.options.length !== cats.length){
+    const current = catSel.value;
+    catSel.innerHTML = cats.map(c=>`<option>${escapeHtml(c)}</option>`).join('');
+    catSel.value = cats.includes(current) ? current : 'الكل';
+  }
+
+  const searchNorm = normalize(search);
+  const list = QUESTIONS.filter(q => {
+    if (cat !== 'الكل' && q.c !== cat) return false;
+    if (diff !== 'الكل' && q.d !== diff) return false;
+    if (!search) return true;
+    const haystack = [q.q, q.c, ...q.a.flatMap(a => [a[0], a[2]||''])].join(' ');
+    return normalize(haystack).includes(searchNorm);
+  });
+
+  const stats = $('#bank-stats');
+  if (stats){
+    const counts = {};
+    QUESTIONS.forEach(q => counts[q.c] = (counts[q.c]||0)+1);
+    stats.innerHTML = Object.entries(counts).map(([c,n]) => `
+      <div style="display:flex;justify-content:space-between;padding:6px 10px;background:rgba(0,0,0,.3);border-radius:8px">
+        <span>${escapeHtml(c)}</span><b style="color:var(--gold)">${n}</b>
+      </div>
+    `).join('');
+  }
+
+  const el = $('#bank-list');
+  if (!el) return;
+  el.innerHTML = list.slice(0, 300).map((q) => {
+    const realIdx = QUESTIONS.indexOf(q);
+    return `<div class="q-item">
+      <div class="meta"><span>${escapeHtml(q.c)}</span><span>${escapeHtml(q.d)}</span></div>
+      <h4>${escapeHtml(q.q)}</h4>
+      <div class="ans-pts">${q.a.map(a=>`${escapeHtml(a[0])} (${a[1]})${a[2] ? ` — مرادفات: ${escapeHtml(a[2])}` : ''}`).join(' • ')}</div>
+      <div class="row" style="margin-top:6px">
+        <button class="btn btn-blue btn-sm" onclick="editQuestion(${realIdx})">تعديل</button>
+        <button class="btn btn-ghost btn-sm" onclick="duplicateQuestion(${realIdx})">نسخ كسؤال جديد</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteQuestion(${realIdx})">حذف</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function duplicateQuestion(idx){
+  const q=QUESTIONS[idx]; if(!q) return;
+  editingIndex=-1;
+  $('#nq-heading').textContent='نسخة جديدة من سؤال';
+  $('#nq-q').value=q.q+' (نسخة)';
+  $('#nq-cat').value=q.c;
+  $('#nq-diff').value=q.d;
+  $('#nq-answers').value=q.a.map(a=>`${a[0]} | ${a[1]} | ${a[2]||''}`).join('\n');
+  $('#nq-submit').textContent='إضافة السؤال';
+  $('#nq-cancel').style.display='inline-block';
+  $('#nq-heading').scrollIntoView({behavior:'smooth',block:'center'});
+  $('#nq-q').focus();
+}
+
+function saveQuestion(){
+  const q = $('#nq-q').value.trim();
+  const cat = $('#nq-cat').value.trim();
+  const diff = $('#nq-diff').value;
+  const raw = $('#nq-answers').value.trim();
+  if (!q || !cat || !raw){ toast('املأ السؤال والفئة والإجابات', 'err'); return; }
+
+  const lines = raw.split('\n').map(l => l.trim()).filter(Boolean);
+  if (lines.length < 5 || lines.length > 8){ toast('عدد الإجابات بين 5 و8', 'err'); return; }
+
+  const answers = [];
+  for (const line of lines){
+    const parts = line.split('|').map(s => s.trim());
+    const txt = parts[0] || '';
+    const pts = parseInt(parts[1], 10);
+    const aliases = parts[2] || '';
+    if (!txt){ toast('إجابة فارغة', 'err'); return; }
+    if (!Number.isFinite(pts) || pts < 0){ toast(`نقاط غير صالحة: ${txt}`, 'err'); return; }
+    answers.push([txt, pts, aliases]);
+  }
+  const answerKeys = answers.map(a => normalize(a[0]));
+  if (new Set(answerKeys).size !== answerKeys.length){ toast('يوجد تكرار في نصوص الإجابات', 'err'); return; }
+  const total = answers.reduce((s,a) => s + a[1], 0);
+  if (total !== 100){ toast(`مجموع النقاط = ${total}. يجب أن يكون 100.`, 'err'); return; }
+
+  const isDuplicate = QUESTIONS.some((x, i) => i !== editingIndex && normalize(x.q) === normalize(q));
+  if (isDuplicate){ toast('سؤال آخر بنفس النص موجود مسبقًا', 'err'); return; }
+
+  const newQ = { c: cat, d: diff, q, a: answers };
+  if (editingIndex >= 0){
+    QUESTIONS[editingIndex] = newQ;
+    toast('تم حفظ التعديل', 'ok');
+  } else {
+    QUESTIONS.push(newQ);
+    toast('تمت إضافة السؤال', 'ok');
+  }
+  cancelEdit();
+  saveQuestions();
+  renderBank();
+  updateHomeCount();
+}
+
+function editQuestion(idx){
+  const q = QUESTIONS[idx];
+  if (!q) return;
+  editingIndex = idx;
+  $('#nq-heading').textContent = 'تعديل سؤال';
+  $('#nq-q').value = q.q;
+  $('#nq-cat').value = q.c;
+  $('#nq-diff').value = q.d;
+  $('#nq-answers').value = q.a.map(a => `${a[0]} | ${a[1]} | ${a[2] || ''}`).join('\n');
+  $('#nq-submit').textContent = 'حفظ التعديل';
+  $('#nq-cancel').style.display = 'inline-block';
+  $('#nq-heading').scrollIntoView({ behavior:'smooth', block:'center' });
+}
+
+function cancelEdit(){
+  editingIndex = -1;
+  $('#nq-heading').textContent = 'إضافة سؤال جديد';
+  $('#nq-q').value = '';
+  $('#nq-cat').value = '';
+  $('#nq-diff').value = 'متوسط';
+  $('#nq-answers').value = '';
+  $('#nq-submit').textContent = 'إضافة السؤال';
+  $('#nq-cancel').style.display = 'none';
+}
+
+function deleteQuestion(idx){
+  if (!confirm('حذف هذا السؤال نهائيًا؟')) return;
+  QUESTIONS.splice(idx, 1);
+  if (editingIndex === idx) cancelEdit();
+  else if (editingIndex > idx) editingIndex--;
+  saveQuestions();
+  renderBank();
+  updateHomeCount();
+}
+
+function exportBank(){
+  const blob = new Blob([JSON.stringify(QUESTIONS, null, 2)], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'tahaddi-al-ayla-questions.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+function importBank(ev){
+  const file = ev.target.files?.[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    try {
+      const data = JSON.parse(String(reader.result));
+      if (!Array.isArray(data)){ toast('الملف يجب أن يحتوي على مصفوفة أسئلة', 'err'); return; }
+      let added = 0, dup = 0, invalid = 0;
+      const existing = new Set(QUESTIONS.map(q => normalize(q.q)));
+      for (const item of data){
+        const q = sanitizeQuestion(item);
+        if (!q){ invalid++; continue; }
+        const key = normalize(q.q);
+        if (existing.has(key)){ dup++; continue; }
+        existing.add(key);
+        QUESTIONS.push(q);
+        added++;
+      }
+      toast(`تم استيراد ${added} (مكرر: ${dup}، غير صالح: ${invalid})`, added > 0 ? 'ok' : 'info');
+      if (added > 0){
+        saveQuestions();
+        renderBank();
+        updateHomeCount();
+      }
+    } catch(e){
+      toast('ملف JSON غير صالح', 'err');
+    }
+  };
+  reader.readAsText(file);
+  ev.target.value = '';
+}
+
+/* ============================================================
+   Fast Money
+============================================================ */
+let fm = null;
+
+function startFastMoneyScreen(){
+  const saved = loadFM();
+  if (saved && saved.phase && saved.phase !== 'finished'){
+    if (confirm('توجد جولة نقاط سريعة محفوظة. هل تريد استئنافها؟')){
+      fm = saved;
+      showScreen('screen-fastmoney');
+      renderFM();
+      if (fm.phase === 'running' && fm.remaining > 0){
+        fm.timerId = setInterval(() => {
+          fm.remaining -= 1;
+          if (fm.remaining <= 0){
+            if (fm.timerId) clearInterval(fm.timerId);
+            fm.timerId = null;
+            fmPlayerDone();
+          } else {
+            $('#fm-timer').textContent = fm.remaining + 'ث';
+            saveFM();
+          }
+        }, 1000);
+      }
+      return;
+    } else {
+      clearFM();
+    }
+  }
+
+  const shuffled = QUESTIONS.slice();
+  for (let i=shuffled.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [shuffled[i],shuffled[j]]=[shuffled[j],shuffled[i]]; }
+  const pool = shuffled.slice(0, 5);
+  if (pool.length < 5){
+    toast('لا توجد أسئلة كافية لبدء الجولة', 'err');
+    return;
+  }
+  fm = {
+    questions: pool, player: 1,
+    answers1: [], answers2: [],
+    idx: 0, remaining: 60, timerId: null, phase: 'idle'
+  };
+  saveFM();
+  showScreen('screen-fastmoney');
+  renderFM();
+}
+
+function fmStart(){
+  if (!fm) return;
+  if (fm.phase !== 'idle') return;
+  fm.idx = 0;
+  fm.remaining = 60;
+  fm.phase = 'running';
+  if (fm.timerId) clearInterval(fm.timerId);
+  fm.timerId = setInterval(() => {
+    fm.remaining -= 1;
+    if (fm.remaining <= 0){
+      if (fm.timerId) clearInterval(fm.timerId);
+      fm.timerId = null;
+      fmPlayerDone();
+    } else {
+      $('#fm-timer').textContent = fm.remaining + 'ث';
+      saveFM();
+    }
+  }, 1000);
+  saveFM();
+  renderFM();
+  playSound('start');
+}
+
+function fmSubmit(){
+  if (!fm || fm.phase !== 'running') return;
+  const input = $('#fm-input').value.trim();
+  if (!input){ toast('اكتب إجابة أولًا', 'err'); return; }
+  const q = fm.questions[fm.idx];
+  if (!q) return;
+
+  const m = matchAnswer(q, input, new Set());
+  const matchedIndex = m.index;
+  let points = matchedIndex !== null ? q.a[matchedIndex][1] : 0;
+  let dup = false;
+
+  if (fm.player === 2 && matchedIndex !== null){
+    const prev = fm.answers1[fm.idx];
+    if (prev && prev.matchedIndex === matchedIndex){
+      points = 0;
+      dup = true;
+    }
+  }
+
+  const record = { input, matchedIndex, points, dup };
+  if (fm.player === 1) fm.answers1[fm.idx] = record;
+  else fm.answers2[fm.idx] = record;
+
+  $('#fm-input').value = '';
+  fm.idx++;
+  if (fm.idx >= fm.questions.length){
+    fmPlayerDone();
+    return;
+  }
+  saveFM();
+  renderFM();
+}
+
+function fmPlayerDone(){
+  if (!fm) return;
+  if (fm.timerId){ clearInterval(fm.timerId); fm.timerId = null; }
+  fm.phase = 'playerDone';
+  saveFM();
+  renderFM();
+  if (fm.player === 2){
+    fmFinish();
+  }
+}
+
+function fmAction(){
+  if (!fm){ startFastMoneyScreen(); return; }
+  if (fm.phase === 'idle'){
+    fmStart();
+  } else if (fm.phase === 'playerDone' && fm.player === 1){
+    fm.player = 2;
+    fm.idx = 0;
+    fm.remaining = 60;
+    fm.phase = 'idle';
+    saveFM();
+    renderFM();
+    toast('دور اللاعب الثاني. اضغط «ابدأ»', 'info');
+  } else if (fm.phase === 'finished'){
+    clearFM();
+    startFastMoneyScreen();
+  }
+}
+
+function fmFinish(){
+  if (!fm) return;
+  if (fm.timerId){ clearInterval(fm.timerId); fm.timerId = null; }
+  fm.phase = 'finished';
+  saveFM();
+  renderFM();
+  const total = fm.answers1.concat(fm.answers2).reduce((s,a) => s + ((a && a.points) || 0), 0);
+  playSound(total >= 200 ? 'win' : 'end');
+}
+
+function renderFM(){
+  if (!fm) return;
+  const total1 = fm.answers1.reduce((s,a)=>s+((a&&a.points)||0),0);
+  const total2 = fm.answers2.reduce((s,a)=>s+((a&&a.points)||0),0);
+  const total = total1 + total2;
+  const win = total >= 200;
+
+  if (fm.phase === 'finished'){
+    $('#fm-title').textContent = win ? '🎉 فوز!' : 'المحاولة انتهت';
+    $('#fm-timer').textContent = '--';
+    $('#fm-q').textContent = `اللاعب الأول: ${total1} — اللاعب الثاني: ${total2} — المجموع: ${total} / 200`;
+    const slots = $('#fm-slots');
+    slots.innerHTML = fm.questions.map((q, i) => {
+      const a1 = fm.answers1[i];
+      const a2 = fm.answers2[i];
+      return `<div class="fm-slot done" style="flex-direction:column;align-items:stretch;padding:10px">
+        <div style="font-weight:800;margin-bottom:4px">${i+1}. ${escapeHtml(q.q)}</div>
+        <div style="font-size:12px;color:#8fb3d0;margin-bottom:4px">الإجابات الصحيحة: ${q.a.map(a => escapeHtml(a[0])).join(' • ')}</div>
+        <div style="font-size:13px">لاعب 1: ${a1 ? `${escapeHtml(a1.input)} (${a1.points}${a1.matchedIndex !== null ? ` — ${escapeHtml(q.a[a1.matchedIndex]?.[0] || '')}` : ''})` : 'لم يجب'} — لاعب 2: ${a2 ? `${escapeHtml(a2.input)} (${a2.points}${a2.dup ? ' • مكررة' : ''}${a2.matchedIndex !== null ? ` — ${escapeHtml(q.a[a2.matchedIndex]?.[0] || '')}` : ''})` : 'لم يجب'}</div>
+      </div>`;
+    }).join('');
+  } else {
+    $('#fm-title').textContent = fm.player === 1 ? 'اللاعب الأول' : 'اللاعب الثاني';
+    $('#fm-timer').textContent = fm.phase === 'running' ? (fm.remaining + 'ث') : '--';
+    if (fm.phase === 'idle'){
+      $('#fm-q').textContent = fm.player === 1 ? 'اضغط «ابدأ» لبدء دور اللاعب الأول' : 'اضغط «ابدأ» لبدء دور اللاعب الثاني';
+    } else if (fm.phase === 'running'){
+      const q = fm.questions[fm.idx];
+      $('#fm-q').textContent = q ? q.q : '—';
+    } else if (fm.phase === 'playerDone'){
+      $('#fm-q').textContent = 'انتهى دور هذا اللاعب';
+    }
+    const answers = fm.player === 1 ? fm.answers1 : fm.answers2;
+    const slots = $('#fm-slots');
+    slots.innerHTML = fm.questions.map((qq, i) => {
+      const a = answers[i];
+      return `<div class="fm-slot ${a ? 'done' : ''}">
+        <span>${i+1}. ${escapeHtml(qq.q)}</span>
+        <span>${a ? `${escapeHtml(a.input)} (${a.points})` : '—'}</span>
+      </div>`;
+    }).join('');
+  }
+
+  const btn = $('#fm-action');
+  if (btn){
+    if (fm.phase === 'idle'){
+      btn.textContent = fm.player === 1 ? 'ابدأ دور اللاعب الأول' : 'ابدأ دور اللاعب الثاني';
+      btn.disabled = false;
+    } else if (fm.phase === 'running'){
+      btn.textContent = 'جاري اللعب...';
+      btn.disabled = true;
+    } else if (fm.phase === 'playerDone'){
+      btn.textContent = 'الانتقال إلى اللاعب الثاني';
+      btn.disabled = false;
+    } else if (fm.phase === 'finished'){
+      btn.textContent = 'إعادة الجولة';
+      btn.disabled = false;
+    }
+  }
+}
+
+/* ============================================================
+   Fullscreen
+============================================================ */
+function toggleFullscreen(){
+  if (!document.fullscreenElement){
+    document.documentElement.requestFullscreen?.().catch(()=>{});
+  } else {
+    document.exitFullscreen?.().catch(()=>{});
+  }
+}
+
+/* ============================================================
+   Init
+============================================================ */
+(function init(){
+  QUESTIONS = loadQuestions();
+  state = loadState() || freshState();
+  updateHomeCount();
+})();
+</script>
+</body>
+</html>
